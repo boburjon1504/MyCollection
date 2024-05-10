@@ -1,18 +1,30 @@
-﻿<div class="d-flex justify-content-center align-content-center align-items-center">
+﻿@model User
+<div class="d-flex justify-content-center align-content-center align-items-center">
     <form class="border rounded-3 p-3">
         <h1>Login</h1>
-        <div class="row mb-3">
+        <div class="row mb-2">
             <label class="col-form-label">Email</label>
             <div>
-                <input type="email" class="form-control userInput bg-dark text-white" placeholder="example@gmail.com">
+                <input asp-for="UserName" class="form-control userInput bg-dark text-white" placeholder="example@gmail.com">
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-1">
             <label class="col-form-label">Password</label>
             <div>
-                <input type="password" class="form-control userInput bg-dark text-white" placeholder="Password">
+                <input type="password" asp-for="Password" class="form-control userInput bg-dark text-white" placeholder="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Sign in</button>
+        <a class="row nav-link" href="#verification">Forgot password?</a>
+        <div class="d-flex">
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a class="nav-link col-6" href="#verification">Register</a>
+        </div>
     </form>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
