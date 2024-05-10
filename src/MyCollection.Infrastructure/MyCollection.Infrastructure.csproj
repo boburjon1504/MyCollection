@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MyCollection.Application\MyCollection.Application.csproj" />
     <ProjectReference Include="..\MyCollection.Persistence\MyCollection.Persistence.csproj" />
   </ItemGroup>

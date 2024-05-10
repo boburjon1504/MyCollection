@@ -55,7 +55,7 @@
 
                         <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center gap-3 mx-3">
                             <a class="text-white btn btn-success rounded-pill px-3 py-1" asp-controller="Account" asp-action="Login">Login</a>
-                            <a class="text-white px-3 py-1 rounded-pill btn btn-danger" href="#register">Register</a>
+                            <a class="text-white px-3 py-1 rounded-pill btn btn-danger" asp-controller="Account" asp-action="Register">Register</a>
                         </div>
                         <div class="rounded-pill border d-flex align-items-center justify-content-center px-3">
                             <div class="form-check form-switch">
@@ -70,16 +70,9 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-            <h6> hello world</h6>
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - MyCollection.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script>
         document.getElementById("switch").addEventListener("click", () => {
             var e = document.getElementsByClassName("userInput")
