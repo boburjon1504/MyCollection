@@ -2,10 +2,7 @@
 using MyCollection.Application.Common.Models;
 using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Entities;
-using MyCollection.Infrastructure.Common.Helpers;
 using MyCollection.Persistence.Brokers.Interfaces;
-using System.IO.Pipes;
-using System.Threading;
 
 namespace MyCollection.Infrastructure.Services;
 public class AccountService(
@@ -15,15 +12,15 @@ public class AccountService(
     ITokenGeneratorService tokenGeneratorService
     ) : IAccountService
 {
-    public async ValueTask<bool> RegisterAsync(User user, CancellationToken cancellationToken = default)
+    public async ValueTask<string> RegisterAsync(User user, CancellationToken cancellationToken = default)
     {
         user.Password = passwordHasher.Hash(user.Password);
         var newUser = await userService.CreateAsync(user, true, cancellationToken);
 
-        return newUser is not null;
+        return tokenGeneratorService.GenerateToken(newUser);
     }
 
-    public async ValueTask<string> LoginAsync(User user)
+    public async ValueTask<string> LoginAsync(User user, CancellationToken cancellationToken = default)
     {
         var foundUser = await userService.GetByUserNameAsync(user.UserName);
 
@@ -69,9 +66,4 @@ public class AccountService(
     private string GetCachKey(string modelName, string userEmail) => string.Join("_", modelName, userEmail);
 
     private int GetCode() => new Random().Next(1000, 10000);
-
-    public ValueTask<string> LoginAsync(User user, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
 }

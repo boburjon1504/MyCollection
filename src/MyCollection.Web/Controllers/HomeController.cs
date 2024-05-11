@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MyCollection.Domain.Entities;
 using MyCollection.Web.Models;
 using System.Diagnostics;
 
@@ -15,6 +16,18 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         return View();
+    }
+
+    [HttpPost]
+    public IActionResult Register(User user)
+    {
+        ModelState.AddModelError("", "Ishlamadi");
+        return View("Index",user);
+    }
+    [HttpPost]
+    public IActionResult Login(User user)
+    {
+        return View("Index",new User());
     }
 
     public IActionResult Privacy()

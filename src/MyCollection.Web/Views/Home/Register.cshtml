@@ -1,0 +1,69 @@
+﻿@model User
+<div class="modal fade" id="registerForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark myForm">
+            <div class="modal-header">
+                <h1 class="modal-title fs-3" id="staticBackdropLabel">Register</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                <form class="p-3 row" id="registerFrm" method="post">
+                    <div class="row mb-1 col-lg-6">
+                        <label class="col-form-label" asp-for="FirstName"></label>
+                        <div>
+                            <input asp-for="FirstName" class="form-control userInput bg-dark text-white" placeholder="Firstname">
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1 col-lg-6">
+                        <label class="col-form-label" asp-for="LastName"></label>
+                        <div>
+                            <input asp-for="LastName" class="form-control userInput bg-dark text-white" placeholder="Lastname">
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1 col-lg-6">
+                        <label class="col-form-label" asp-for="Email"></label>
+                        <div>
+                            <input asp-for="Email" class="form-control userInput bg-dark text-white" placeholder="example@gmail.com">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1 col-lg-6">
+                        <label class="col-form-label" asp-for="UserName"></label>
+                        <div>
+                            <input asp-for="UserName" class="form-control userInput bg-dark text-white" placeholder="Username">
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1 col-lg-6">
+                        <label class="col-form-label" asp-for="Password"></label>
+                        <div>
+                            <input type="password" asp-for="Password" class="form-control userInput bg-dark text-white" placeholder="Password">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @*  <div class="row mb-1 col-lg-6">
+                    <label class="col-form-label">Password</label>
+                    <div>
+                    <input type="password" asp-for="Password" class="form-control userInput bg-dark text-white" placeholder="Password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    </div> *@
+                    <div class="d-flex mt-3">
+                        <button type="submit" class="btn btn-primary" id="registerBtn" asp-controller="Home" asp-action="Register">Register</button>
+                        <a class="nav-link col-6" id="loginLink" style="cursor:pointer">Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

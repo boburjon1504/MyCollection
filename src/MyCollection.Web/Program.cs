@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
 builder.Services.AddDbContext<CollectionDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton<ICacheBroker, LazyCacheBroker>();

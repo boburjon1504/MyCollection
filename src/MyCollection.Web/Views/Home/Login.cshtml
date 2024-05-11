@@ -1,0 +1,40 @@
+﻿@model User
+<div class="modal fade" id="loginForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark myForm">
+            <div class="modal-header">
+                <h1 class="modal-title fs-3" id="staticBackdropLabel">Login</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="p-3" method="post">
+                    <div class="row mb-1">
+                        <label class="col-form-label">Email</label>
+                        <div>
+                            <input asp-for="UserName" class="form-control userInput bg-dark text-white" placeholder="example@gmail.com">
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <label class="col-form-label">Password</label>
+                        <div>
+                            <input type="password" asp-for="Password" class="form-control userInput bg-dark text-white" placeholder="Password">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <a class="row nav-link" href="#verification">Forgot password?</a>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="Login">Login</button>
+                        <a class="nav-link col-6" id="registerLink" style="cursor:pointer">Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
