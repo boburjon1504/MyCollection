@@ -15,8 +15,8 @@
     <header>
         <nav class="navbar border-bottom navbar-expand-lg bg-body-tertiary bg-transparent mb-3">
             <div class="container">
-                <a class="navbar-brand fs-2" href="#">My collection</a>
-
+                <a class="navbar-brand fs-2 d-lg-block d-none" asp-controller="Home" asp-action="Index">My collection</a>
+                <input class="border rounded-pill bg-dark px-3 userInput" type="search" placeholder="Search" style="height:40px;width:250px" />
                 <button class="navbar-toggler border text-black shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -33,14 +33,14 @@
                             <li class="nav-item mx-2">
                                 <a class="nav-link active" aria-current="page" href="#home">Home</a>
                             </li>
-                            <li class="nav-item mx-2">
-                                <a class="nav-link active" href="#about">About</a>
-                            </li>
+                            @* <li class="nav-item mx-2">
+                            <a class="nav-link active" href="#about">About</a>
+                            </li> *@
                             <li class="nav-item dropdown">
                                 <a class="nav-link active dropdown-toggle" href="#" dropdown role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Dropdown
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu bg-dark userInput">
                                     <li><a class="dropdown-item" href="#">Action</a></li>
                                     <li><a class="dropdown-item" href="#">Another action</a></li>
                                     <li>
@@ -50,6 +50,7 @@
                                 </ul>
                             </li>
                         </ul>
+
                         @* <form class="d-flex mt-3" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -57,28 +58,40 @@
                         @if (!Context.User.Identity.IsAuthenticated)
                         {
                             <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center gap-3 mx-3">
-                                <button class="btn btn-outline-danger rounded-pill p-2 fs-5" id="login">
+                                <button class="text-white btn btn-success rounded-pill px-3 py-1" id="login">Login</button>
+                                <button class="text-white px-3 py-1 rounded-pill btn btn-danger" id="register">Register</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center mx-3">
+                                <a class="border rounded-pill d-flex px-2 justify-content-center align-items-center gap-2 fs-5 userInput bg-transparent text-white"
+                                        style="cursor:pointer;width:140px"
+                                        
+                                asp-controller="Account" asp-action="Profile" asp-route-userName="@Model.UserName">
+                                    <div class="rounded-circle overflow-hidden">
+                                        <img src="/images/github.jpg" style="width:40px;height:40px" />
+                                    </div>
+                                    @if (Model.UserName is not null)
+                                    {
+                                        @Model.UserName
+                                    }
+                                    else
+                                    {
+                                        <p>Account</p>
+                                    }
+                                </a>
+
+                                <a class="nav-link link-danger rounded-pill fs-5" type="submit" asp-controller="Account" asp-action="Logout">
                                     Logout
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
                                         <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
                                     </svg>
-                                </button>
-                                <div class="border rounded-pill d-flex p-1 px-2 justify-content-center align-items-center gap-2 fs-5 mb-sm-3" style="cursor:pointer" id="register">
-                                    <div class="rounded-circle overflow-hidden">
-                                        <img src="/images/github.jpg" style="width:40px;height:40px"/>
-                                    </div> Account
-                                </div>
+                                </a>
                             </div>
                         }
-                        else
-                        {
-                            <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center gap-3 mx-3">
-                                <button class="text-white btn btn-success rounded-pill px-3 py-1" id="login">Logout</button>
-                                <button class="text-white px-3 py-1 rounded-pill btn btn-danger" id="register">Register</button>
-                            </div>
-                        }
-                        <div class="rounded-pill border d-flex align-items-center justify-content-center px-3">
+                        <div class="d-flex align-items-center justify-content-center">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="switch" checked>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Mode</label>
@@ -97,18 +110,37 @@
             <partial name="~/Views/Home/Register.cshtml" model="@Model"></partial>
 
             <!-- Register Form -->
+
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+                <div id="liveToast" class="toast bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header bg-primary">
+                        <img src="..." class="rounded me-2" alt="...">
+                        <strong class="me-auto">Bootstrap</strong>
+                        <small>11 mins ago</small>
+                        <button type="button" class="btn-close" id="dismisToast" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
+                </div>
+            </div>
             @RenderBody()
+            <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+
         </main>
     </div>
     <script>
 
-        // document.getElementById("registerBtn").addEventListener("click", () => {
-        //     if ($("#registerFrm").valid()) {
-        //         $("#registerForm").modal("hide");
-        //     } else {
-        //         console.log("registerga ketdi")
-        //     }
-        // })
+        document.getElementById("liveToastBtn").addEventListener("click", () => {
+            $("#liveToast").show()
+            setTimeout(function () {
+                $("#liveToast").hide()
+            }, 2000)
+        })
+
+        document.getElementById("dismisToast").addEventListener("click", () => {
+            $("#liveToast").hide()
+        })
 
         showModal("login", "loginForm")
         showModal("register", "registerForm")
@@ -118,23 +150,32 @@
 
 
         function showModal(button, modalName) {
-            document.getElementById(`${button}`).addEventListener("click", () => {
-                $(`#${modalName}`).modal('show');
-            })
+            var btn = document.getElementById(`${button}`)
+            if (btn != null) {
+                btn.addEventListener("click", () => {
+                    $(`#${modalName}`).modal('show');
+                })
+            }
         }
 
         function changeModal(button, currentModal, nextModal) {
-            document.getElementById(`${button}`).addEventListener("click", () => {
-                $(`#${currentModal}`).modal('hide');
-                $(`#${nextModal}`).modal('show');
-            })
+            var btn = document.getElementById(`${button}`)
+            if (btn != null) {
+                btn.addEventListener("click", () => {
+                    $(`#${currentModal}`).modal('hide');
+                    $(`#${nextModal}`).modal('show');
+                })
+            }
         }
 
         document.getElementById("switch").addEventListener("click", () => {
             var forms = document.getElementsByClassName("myForm")
             var e = document.getElementsByClassName("userInput")
+
+            console.log("switch is working")
             if (document.body.getAttribute('data-bs-theme') == 'dark') {
                 document.body.setAttribute('data-bs-theme', 'light');
+
                 for (var i = 0; i < e.length; i++) {
                     e[i].classList.remove("bg-dark")
                     e[i].classList.remove("text-white")

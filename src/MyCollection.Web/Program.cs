@@ -1,18 +1,32 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MyCollection.Application.Common.Helpers;
+using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Common.Settings;
+using MyCollection.Infrastructure.Common.Helpers;
+using MyCollection.Infrastructure.Services;
 using MyCollection.Persistence.Brokers;
 using MyCollection.Persistence.Brokers.Interfaces;
 using MyCollection.Persistence.DataContext;
+using MyCollection.Persistence.Repositories;
+using MyCollection.Persistence.Repositories.Interfaces;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)));
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
 builder.Services.AddDbContext<CollectionDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+builder.Services
+    .AddScoped<IUserRepository, UserRepository>()
+    .AddScoped<IUserService, UserService>()
+    .AddScoped<IPasswordHasher, PasswordHasher>()
+    .AddScoped<ITokenGeneratorService, TokenGeneratorService>()
+    .AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddSingleton<ICacheBroker, LazyCacheBroker>();
 
