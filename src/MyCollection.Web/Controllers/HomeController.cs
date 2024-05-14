@@ -16,7 +16,7 @@ public class HomeController(IAccountService accountService, IUserService userSer
          var userId = Guid.Parse(a.Value);
         var user = await userService.GetByIdAsync(userId, HttpContext.RequestAborted);
 
-        return View(user);
+        return View(new ModelForView { User=user, LoginDetails = new LoginDetails()});
     }
 
     [HttpPost]
@@ -31,7 +31,7 @@ public class HomeController(IAccountService accountService, IUserService userSer
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
-            return View("Index",user);
+            return View("Index",new ModelForView { User=user});
         }
         return RedirectToAction("Index");
     }
@@ -48,7 +48,7 @@ public class HomeController(IAccountService accountService, IUserService userSer
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
-            return View("Index",user);
+            return View("Index",new ModelForView { User=user});
         }
         return RedirectToAction("Index", "Home");
     }

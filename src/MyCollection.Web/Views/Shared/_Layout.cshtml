@@ -1,4 +1,8 @@
-﻿@model User
+﻿@model ModelForView
+@{
+    var loginDetails = new LoginDetails();
+    var user = new User();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +35,7 @@
                     <div class="offcanvas-body d-flex flex-lg-row flex-column p-4 p-lg-0">
                         <ul class="navbar-nav justify-content-center align-items-center fs-5 flex-grow-1 pe-3">
                             <li class="nav-item mx-2">
-                                <a class="nav-link active" aria-current="page" href="#home">Home</a>
+                                <a class="nav-link active" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             @* <li class="nav-item mx-2">
                             <a class="nav-link active" href="#about">About</a>
@@ -66,15 +70,23 @@
                         {
                             <div class="d-flex flex-column flex-lg-row justify-content-center align-items-center mx-3">
                                 <a class="border rounded-pill d-flex px-2 justify-content-center align-items-center gap-2 fs-5 userInput bg-transparent text-white"
-                                        style="cursor:pointer;width:140px"
-                                        
-                                asp-controller="Account" asp-action="Profile" asp-route-userName="@Model.UserName">
+                                style="cursor:pointer;width:140px"
+
+                                asp-controller="Account" asp-action="Profile" asp-route-userName="@Model.User.UserName">
                                     <div class="rounded-circle overflow-hidden">
-                                        <img src="/images/github.jpg" style="width:40px;height:40px" />
+                                        @if (Model.User.ImgPath is null)
+                                        {
+                                            <img src="/images/github.jpg" style="width:40px;height:40px;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="/@Model.User.ImgPath" style="width:40px;height:40px;" />
+
+                                        }
                                     </div>
-                                    @if (Model.UserName is not null)
+                                    @if (Model.User.UserName is not null)
                                     {
-                                        @Model.UserName
+                                        @Model.User.UserName
                                     }
                                     else
                                     {
@@ -106,9 +118,7 @@
         <main role="main" class="pb-3">
             @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
             <!-- Login Modal -->
-            <partial name="~/Views/Home/Login.cshtml" model="@Model"></partial>
-            <partial name="~/Views/Home/Register.cshtml" model="@Model"></partial>
-
+            
             <!-- Register Form -->
 
             <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -125,7 +135,20 @@
                 </div>
             </div>
             @RenderBody()
+            <partial name="~/Views/Home/Login.cshtml" model="@loginDetails"></partial>
+            <partial name="~/Views/Home/Register.cshtml" model="@user"></partial>
             <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Dropdown link
+                </a>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </div>
 
         </main>
     </div>

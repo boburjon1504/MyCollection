@@ -20,7 +20,8 @@ namespace MyCollection.Persistence.Migrations
                     LastName = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false)
+                    Password = table.Column<string>(type: "text", nullable: false),
+                    ImgPath = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
