@@ -12,11 +12,11 @@
             @if (Model.User.ImgPath is not null)
             {
                 <img src="/@Model.User.ImgPath
-                            " style="width:150px;height:150px" id="userImg" class="rounded-circle" />
+                                    " style="width:150px;height:150px" id="userImg" class="rounded-circle" />
             }
             else
             {
-                <img src="/Images/github.jpg" style="width:150px;height:150px" id="userImg" class="rounded-circle" />
+                <img src="/Images/github.jpg" style="width:150px;height:150px" id="userImg" class="rounded-circle border-4 border-success" />
             }
 
             <form class="d-flex flex-column justify-content-center gap-3 mt-3" id="editForm" enctype="multipart/form-data" method="post">
@@ -72,10 +72,10 @@
                         <span asp-validation-for="User.UserName" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="d-flex mt-3 justify-content-end">
+                <div class="d-flex flex-column flex-lg-row flex-column-reverse justify-content-end position-absolute gap-3 col-4"
+                     style="top:40px;right:40px">
                     <button type="button"
-                            class="btn-outline-success position-absolute end-10 bg-transparent border-0"
-                            style="top:40px"
+                            class="bg-transparent border-0 text-success text-end"
                             id="editBtn" asp-controller="Account"
                             asp-action="UploadImg"
                             asp-route-img="@Model.ProfileImg.Img" asp-route-userId="@Model.ProfileImg.UserId">
@@ -85,6 +85,17 @@
                         </svg>
                         Edit
                     </button>
+                    <button type="button"
+                            class="bg-transparent border-0 text-danger text-end"
+                            id="deleteAccount" asp-controller="Account"
+                            asp-action="UploadImg"
+                            asp-route-img="@Model.ProfileImg.Img" asp-route-userId="@Model.ProfileImg.UserId">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z" />
+                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708" />
+                        </svg>
+                        Delete account
+                    </button>
                 </div>
             </form>
         </div>
@@ -92,14 +103,16 @@
     </div>
 
     <hr class="w-100" />
-   
+
     <partial name="~/Views/Account/Edit.cshtml" model="@Model.User"></partial>
+    <partial name="~/Views/Account/Delete.cshtml" model="@Model.User"></partial>
 </div>
 <script>
-    
+
 
 
     showModal("editBtn", "editFrm")
+    showModal("deleteAccount", "deleteForm")
 
     function showModal(button, modalName) {
         console.log("ishladi")

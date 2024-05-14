@@ -44,27 +44,38 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
     {
         var user = await userService.GetByIdAsync(profileImg.UserId);
         var root = webHost.WebRootPath;
-        if (profileImg.Img is not null)
+        
+        if (profileImg.Img is null)
         {
-            var extension = Path.GetExtension(profileImg.Img.FileName);
-            var filePath = Path.Combine("Images", $"{user.Id}{extension}");
+            return View("Profile", new ModelForView { User = user, ProfileImg = new ProfileImg { UserId = user.Id } });
 
-
-            var fullPath = Path.Combine(root, filePath);
-
-            if (user.ImgPath is not null)
-            {
-                System.IO.File.Delete(fullPath);
-            }
-
-            var file = new FileStream(fullPath, FileMode.OpenOrCreate);
-            await profileImg.Img.CopyToAsync(file);
-            file.Close();
-
-            user.ImgPath = filePath.Replace(@"\", "/");
-
-            await userService.UpdateAsync(user, cancellationToken: HttpContext.RequestAborted);
         }
+
+        if (profileImg.Img.Length > 500000)
+        {
+            ModelState.AddModelError("", $"Img size is over 500kb, please resize it or choose another img");
+            return View("Profile", new ModelForView { User = user, ProfileImg = new ProfileImg { UserId = user.Id } });
+
+        }
+
+        var extension = Path.GetExtension(profileImg.Img.FileName);
+        var filePath = Path.Combine("Images", $"{user.Id}{extension}");
+
+
+        var fullPath = Path.Combine(root, filePath);
+
+        if (user.ImgPath is not null)
+        {
+            System.IO.File.Delete(fullPath);
+        }
+
+        var file = new FileStream(fullPath, FileMode.OpenOrCreate);
+        await profileImg.Img.CopyToAsync(file);
+        file.Close();
+
+        user.ImgPath = filePath.Replace(@"\", "/");
+
+        await userService.UpdateAsync(user, cancellationToken: HttpContext.RequestAborted);
 
         return RedirectToAction("Profile", "Account", new { userName = user.UserName });
     }
@@ -103,7 +114,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         {
             ModelState.AddModelError("", $"Username {user.UserName} is already exist");
 
-            return View("Profile",new ModelForView { User = foundUser, ProfileImg = new ProfileImg { UserId = foundUser.Id } });
+            return View("Profile", new ModelForView { User = foundUser, ProfileImg = new ProfileImg { UserId = foundUser.Id } });
         }
 
         foundUser.FirstName = user.FirstName;
@@ -113,5 +124,12 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         await userService.UpdateAsync(foundUser, cancellationToken: HttpContext.RequestAborted);
 
         return RedirectToAction("Profile", "Account", new { userName = user.UserName });
+    }
+
+    public async ValueTask<IActionResult> Delete(Guid user)
+    {
+        Response.Cookies.Delete("token");
+
+        return RedirectToAction("Index", "Home");
     }
 }
