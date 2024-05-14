@@ -2,6 +2,7 @@
 using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Entities;
 using MyCollection.Web.Models;
+using System.Runtime.InteropServices.Marshalling;
 namespace MyCollection.Web.Controllers;
 public class AccountController(IUserService userService, IWebHostEnvironment webHost) : Controller
 {
@@ -20,6 +21,16 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         if (user is null)
             user = await userService.GetByIdAsync(Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value));
 
+
+        var edit = new UserForEdit
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            UserName = user.UserName,
+        };
+
+        ViewBag.Edit = edit;
 
         return View(new ModelForView
         {
@@ -55,7 +66,6 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
             await userService.UpdateAsync(user, cancellationToken: HttpContext.RequestAborted);
         }
 
-
         return RedirectToAction("Profile", "Account", new { userName = user.UserName });
     }
 
@@ -81,6 +91,27 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         }
 
         return RedirectToAction("Profile", "Account", new { userName = user.UserName });
+    }
 
+    public async ValueTask<IActionResult> Edit(User user)
+    {
+        var foundUser = await userService.GetByIdAsync(user.Id, HttpContext.RequestAborted);
+
+        var isUnique = !userService.Get().Where(u => u.Id != user.Id).Any(u => u.UserName.Equals(user.UserName));
+
+        if (!isUnique)
+        {
+            ModelState.AddModelError("", $"Username {user.UserName} is already exist");
+
+            return View("Profile",new ModelForView { User = foundUser, ProfileImg = new ProfileImg { UserId = foundUser.Id } });
+        }
+
+        foundUser.FirstName = user.FirstName;
+        foundUser.LastName = user.LastName;
+        foundUser.UserName = user.UserName;
+
+        await userService.UpdateAsync(foundUser, cancellationToken: HttpContext.RequestAborted);
+
+        return RedirectToAction("Profile", "Account", new { userName = user.UserName });
     }
 }
