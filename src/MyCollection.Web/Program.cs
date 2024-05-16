@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using MyCollection.Application.Common.Helpers;
 using MyCollection.Application.Interfaces;
@@ -11,6 +12,8 @@ using MyCollection.Persistence.Brokers.Interfaces;
 using MyCollection.Persistence.DataContext;
 using MyCollection.Persistence.Repositories;
 using MyCollection.Persistence.Repositories.Interfaces;
+using MyCollection.Web.Models;
+using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,13 +73,25 @@ var app = builder.Build();
 
 app.UseExceptionHandler("/Home/Error");
 app.UseHsts();
+app.UseStatusCodePages(async context =>
+{
+    var response = context.HttpContext.Response;
+    if (response.StatusCode == (int)HttpStatusCode.Unauthorized ||
+        response.StatusCode == (int)HttpStatusCode.Forbidden)
+    {
+        response.Redirect("/Home");
+    }
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+
 
 app.MapControllerRoute(
     name: "default",

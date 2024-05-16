@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Entities;
 using MyCollection.Web.Models;
-using System.Runtime.InteropServices.Marshalling;
 namespace MyCollection.Web.Controllers;
+[Authorize]
 public class AccountController(IUserService userService, IWebHostEnvironment webHost) : Controller
 {
     public IActionResult Logout()

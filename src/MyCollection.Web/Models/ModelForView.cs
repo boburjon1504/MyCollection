@@ -9,4 +9,6 @@ public class ModelForView
     public LoginDetails LoginDetails = new LoginDetails();
 
     public ProfileImg ProfileImg { get; set; } = new ProfileImg();
+
+    public ErrorViewModel ErrorViewModel { get; set; }
 }
