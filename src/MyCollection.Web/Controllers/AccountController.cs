@@ -5,7 +5,7 @@ using MyCollection.Domain.Entities;
 using MyCollection.Web.Models;
 namespace MyCollection.Web.Controllers;
 [Authorize]
-public class AccountController(IUserService userService, IWebHostEnvironment webHost,IImgService imgService) : Controller
+public class AccountController(IUserService userService, IWebHostEnvironment webHost, IImgService imgService) : Controller
 {
     public IActionResult Logout()
     {
@@ -44,8 +44,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
     public async ValueTask<IActionResult> UploadImg(ProfileImg profileImg)
     {
         var user = await userService.GetByIdAsync(profileImg.UserId);
-        var root = webHost.WebRootPath;
-        
+
         if (profileImg.Img is null)
         {
             return View("Profile", new ModelForView { User = user, ProfileImg = new ProfileImg { UserId = user.Id } });
@@ -58,8 +57,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
 
         }
 
-
-        user.ImgPath = await imgService.SaveImgAsync(profileImg.Img, profileImg.UserId, root);
+        user.ImgPath = await imgService.SaveImgAsync(profileImg.Img, profileImg.UserId, webHost.WebRootPath);
 
         await userService.UpdateAsync(user, cancellationToken: HttpContext.RequestAborted);
 
@@ -73,7 +71,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         if (user.ImgPath is not null)
         {
 
-            await imgService.DeleteAsync(user.ImgPath,webHost.WebRootPath);
+            await imgService.DeleteAsync(user.ImgPath, webHost.WebRootPath);
 
             user.ImgPath = null;
 
@@ -105,8 +103,14 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         return RedirectToAction("Profile", "Account", new { userName = user.UserName });
     }
 
-    public async ValueTask<IActionResult> Delete(Guid user)
+    public async ValueTask<IActionResult> Delete(Guid userId)
     {
+        var user = await userService.GetByIdAsync(userId, HttpContext.RequestAborted);
+
+        await userService.DeleteAsync(user, saveChanges: true, cancellationToken: HttpContext.RequestAborted);
+
+        await imgService.DeleteAsync(user.ImgPath, webHost.WebRootPath);
+
         Response.Cookies.Delete("token");
 
         return RedirectToAction("Index", "Home");

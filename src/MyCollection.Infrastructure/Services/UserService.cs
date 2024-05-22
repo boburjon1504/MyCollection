@@ -43,4 +43,9 @@ public class UserService(IUserRepository userRepository) : IUserService
     }
     private bool IsUniqueEmail(string email) => !Get().Any(u => u.Email == email);
     private bool IsUniqueUserName(string userName) => !Get().Any(u => u.UserName == userName);
+
+    public ValueTask<bool> DeleteAsync(User user, bool saveChanges = true, CancellationToken cancellationToken = default)
+    {
+        return userRepository.DeleteAsync(user, saveChanges, cancellationToken); 
+    }
 }

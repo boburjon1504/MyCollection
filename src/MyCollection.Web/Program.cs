@@ -26,6 +26,10 @@ builder.Services.AddDbContext<CollectionDbContext>(o => o.UseNpgsql(builder.Conf
 
 builder.Services
     .AddScoped<IUserRepository, UserRepository>()
+    .AddScoped<ICollectionRepository, CollectionRepository>()
+    .AddScoped<ICollectionItemRepository, CollectionItemRepository>()
+    .AddScoped<ICommentRepository, CommentRepository>()
+    .AddScoped<ILikeRepository, LikeRepository>()
     .AddScoped<IUserService, UserService>()
     .AddScoped<IPasswordHasher, PasswordHasher>()
     .AddScoped<ITokenGeneratorService, TokenGeneratorService>()

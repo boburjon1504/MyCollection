@@ -31,9 +31,10 @@ public class UserRepository(CollectionDbContext dbContext) : EntityBaseRepositor
         return base.UpdateAsync(user, saveChanges, cancellationToken);
     }
 
-
-    public new ValueTask<User> DeleteAsync(User user, bool saveChanges, CancellationToken cancellationToken)
+    public async new ValueTask<bool> DeleteAsync(User user, bool saveChanges, CancellationToken cancellationToken)
     {
-        return base.DeleteAsync(user, saveChanges, cancellationToken);
+        await base.DeleteAsync(user, saveChanges, cancellationToken);
+
+        return true;
     }
 }
