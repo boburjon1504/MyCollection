@@ -31,7 +31,6 @@ public class CommentRepository(CollectionDbContext dbContext) : EntityBaseReposi
         return base.UpdateAsync(comment, saveChanges, cancellationToken);
     }
 
-
     public async new ValueTask<bool> DeleteAsync(Comment comment, bool saveChanges, CancellationToken cancellationToken)
     {
         await base.DeleteAsync(comment, saveChanges, cancellationToken);

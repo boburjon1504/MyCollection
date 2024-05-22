@@ -31,7 +31,6 @@ public class LikeRepository(CollectionDbContext dbContext) : EntityBaseRepositor
         return base.UpdateAsync(like, saveChanges, cancellationToken);
     }
 
-
     public async new ValueTask<bool> DeleteAsync(Like like, bool saveChanges, CancellationToken cancellationToken)
     {
         await base.DeleteAsync(like, saveChanges, cancellationToken);

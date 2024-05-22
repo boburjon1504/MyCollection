@@ -31,7 +31,6 @@ public class CollectionRepository(CollectionDbContext dbContext) : EntityBaseRep
         return base.UpdateAsync(collection, saveChanges, cancellationToken);
     }
 
-
     public async new ValueTask<bool> DeleteAsync(Collection collection, bool saveChanges, CancellationToken cancellationToken)
     {
         await base.DeleteAsync(collection, saveChanges, cancellationToken);
