@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Common.Settings;
 using MyCollection.Domain.Entities;
+using MyCollection.Domain.Enums;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -36,6 +37,7 @@ public class TokenGeneratorService(IOptions<JwtSettings> jwtSettings) : ITokenGe
     private List<Claim> GetClaims(User user) => new List<Claim>
     {
         new Claim("UserId",user.Id.ToString()),
+        new Claim(ClaimTypes.Role,user.Role.ToString()),
         new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
         new Claim(ClaimTypes.Email,user.Email),
     };

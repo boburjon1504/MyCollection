@@ -5,7 +5,7 @@ using MyCollection.Domain.Entities;
 using MyCollection.Web.Models;
 namespace MyCollection.Web.Controllers;
 [Authorize]
-public class AccountController(IUserService userService, IWebHostEnvironment webHost) : Controller
+public class AccountController(IUserService userService, IWebHostEnvironment webHost,IImgService imgService) : Controller
 {
     public IActionResult Logout()
     {
@@ -49,7 +49,6 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         if (profileImg.Img is null)
         {
             return View("Profile", new ModelForView { User = user, ProfileImg = new ProfileImg { UserId = user.Id } });
-
         }
 
         if (profileImg.Img.Length > 500000)
@@ -59,22 +58,8 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
 
         }
 
-        var extension = Path.GetExtension(profileImg.Img.FileName);
-        var filePath = Path.Combine("Images", $"{user.Id}{extension}");
 
-
-        var fullPath = Path.Combine(root, filePath);
-
-        if (user.ImgPath is not null)
-        {
-            System.IO.File.Delete(fullPath);
-        }
-
-        var file = new FileStream(fullPath, FileMode.OpenOrCreate);
-        await profileImg.Img.CopyToAsync(file);
-        file.Close();
-
-        user.ImgPath = filePath.Replace(@"\", "/");
+        user.ImgPath = await imgService.SaveImgAsync(profileImg.Img, profileImg.UserId, root);
 
         await userService.UpdateAsync(user, cancellationToken: HttpContext.RequestAborted);
 
@@ -88,14 +73,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         if (user.ImgPath is not null)
         {
 
-            var root = webHost.WebRootPath;
-
-            var filePath = user.ImgPath.Replace("/", @"\");
-
-            var fullPath = Path.Combine(root, filePath);
-
-
-            System.IO.File.Delete(fullPath);
+            await imgService.DeleteAsync(user.ImgPath,webHost.WebRootPath);
 
             user.ImgPath = null;
 

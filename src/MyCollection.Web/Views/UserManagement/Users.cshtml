@@ -1,0 +1,63 @@
+﻿@model ModelForView
+@{
+    ViewData["Title"] = "User management";
+}
+<div>
+    <h1>Hello from users</h1>
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th class="text-center">Username</th>
+                <th class="text-center">Firstname</th>
+                <th class="text-center">Lastname</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @{
+                var c = 0;
+            }
+            @foreach (var user in ViewBag.Users)
+            {
+                c++;
+                <tr>
+                    <th class="d-flex justify-content-center align-items-center gap-4">
+                        @if (user.ImgPath is not null)
+                        {
+                            <img src="/@user.ImgPath" class="rounded-circle" style="width:40px;height:40px" />
+                        }
+                        else
+                        {
+                            <img src="~/Images/github.jpg" class="rounded-circle" style="width:40px;height:40px" />
+                        }
+                        <a asp-controller="Account" asp-action="Profile" asp-route-userName="@user.UserName">
+                            @user.UserName
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+                            </svg>
+                        </a>
+                    </th>
+                    <th class="text-center">@user.FirstName</th>
+                    <th class="text-center">@user.LastName</th>
+                    <th class="text-center">@user.Email</th>
+                    <th class="text-center">
+                        @if (c % 2 == 0)
+                        {
+                            <button class="btn btn-outline-danger" disabled>Blocked</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-success" disabled>Active</button>
+                        }
+                    </th>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>

@@ -1,5 +1,5 @@
 ﻿using MyCollection.Domain.Common.Auditables;
-using System.ComponentModel.DataAnnotations;
+using MyCollection.Domain.Enums;
 namespace MyCollection.Domain.Entities;
 public class User : Entity
 {
@@ -9,10 +9,13 @@ public class User : Entity
 
     public string Email { get; set; } = default!;
 
-    [Required(ErrorMessage = "Username is required")]
     public string UserName { get; set; } = default!;
 
     public string Password { get; set; } = default!;
 
+    public Role Role { get; set; } = Role.User;
+    
     public string? ImgPath { get; set; }
+
+    public bool IsActive { get; set; }
 }
