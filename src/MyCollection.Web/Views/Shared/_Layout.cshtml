@@ -17,9 +17,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MyCollection.Web.styles.css" asp-append-version="true" />
 </head>
-<body data-bs-theme="dark">
+<body data-bs-theme="dark" style="padding-top:90px">
     <header>
-        <nav class="navbar border-bottom navbar-expand-lg bg-body-tertiary bg-transparent mb-3">
+        <nav class="navbar border-bottom navbar-expand-lg mb-3 fixed-top bg-dark myForm">
             <div class="container">
                 <a class="navbar-brand fs-2" asp-controller="Home" asp-action="Index">My collection</a>
                 <input class="border rounded-pill bg-dark px-3 userInput" type="search" placeholder="Search" style="height:40px;width:250px" />
@@ -80,7 +80,7 @@
                                         }
                                         else
                                         {
-                                            <img src="/@Model.User.ImgPath" style="width:40px;height:40px;" />
+                                            <img src="@Model.User.ImgPath" style="width:40px;height:40px;" />
 
                                         }
                                     </div>

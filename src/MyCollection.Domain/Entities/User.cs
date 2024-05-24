@@ -18,4 +18,6 @@ public class User : Entity
     public string? ImgPath { get; set; }
 
     public bool IsActive { get; set; }
+
+    public ICollection<Collection> Collections { get; set; } = new List<Collection>();
 }

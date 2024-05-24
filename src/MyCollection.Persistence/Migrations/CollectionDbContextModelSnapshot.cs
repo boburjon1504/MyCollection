@@ -196,7 +196,7 @@ namespace MyCollection.Persistence.Migrations
             modelBuilder.Entity("MyCollection.Domain.Entities.Collection", b =>
                 {
                     b.HasOne("MyCollection.Domain.Entities.User", "Owner")
-                        .WithMany()
+                        .WithMany("Collections")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -276,6 +276,11 @@ namespace MyCollection.Persistence.Migrations
             modelBuilder.Entity("MyCollection.Domain.Entities.Comment", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("MyCollection.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Collections");
                 });
 #pragma warning restore 612, 618
         }

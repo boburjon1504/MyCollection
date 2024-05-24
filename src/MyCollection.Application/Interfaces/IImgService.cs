@@ -3,7 +3,7 @@
 namespace MyCollection.Application.Interfaces;
 public interface IImgService
 {
-    ValueTask<string> SaveImgAsync(IFormFile img, Guid pathHelper, string rootPath);
+    ValueTask<string> SaveImgAsync(IFormFile img, Guid pathHelper);
 
-    ValueTask DeleteAsync(string path, string rootPath);
+    ValueTask DeleteAsync(string path);
 }

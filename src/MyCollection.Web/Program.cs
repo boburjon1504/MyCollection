@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using MyCollection.Application.Common.Helpers;
 using MyCollection.Application.Interfaces;
@@ -12,7 +11,6 @@ using MyCollection.Persistence.Brokers.Interfaces;
 using MyCollection.Persistence.DataContext;
 using MyCollection.Persistence.Repositories;
 using MyCollection.Persistence.Repositories.Interfaces;
-using MyCollection.Web.Models;
 using System.Net;
 using System.Text;
 
@@ -25,6 +23,7 @@ builder.Services.AddDbContext<CollectionDbContext>(o => o.UseNpgsql(builder.Conf
 
 
 builder.Services
+    .AddScoped<IImgService,ImgService>()
     .AddScoped<IUserRepository, UserRepository>()
     .AddScoped<ICollectionRepository, CollectionRepository>()
     .AddScoped<ICollectionItemRepository, CollectionItemRepository>()

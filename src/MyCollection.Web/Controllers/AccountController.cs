@@ -57,7 +57,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
 
         }
 
-        user.ImgPath = await imgService.SaveImgAsync(profileImg.Img, profileImg.UserId, webHost.WebRootPath);
+        user.ImgPath = await imgService.SaveImgAsync(profileImg.Img, profileImg.UserId);
 
         await userService.UpdateAsync(user, cancellationToken: HttpContext.RequestAborted);
 
@@ -71,7 +71,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         if (user.ImgPath is not null)
         {
 
-            await imgService.DeleteAsync(user.ImgPath, webHost.WebRootPath);
+            await imgService.DeleteAsync(user.ImgPath);
 
             user.ImgPath = null;
 
@@ -109,7 +109,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
 
         await userService.DeleteAsync(user, saveChanges: true, cancellationToken: HttpContext.RequestAborted);
 
-        await imgService.DeleteAsync(user.ImgPath, webHost.WebRootPath);
+        await imgService.DeleteAsync(user.ImgPath);
 
         Response.Cookies.Delete("token");
 

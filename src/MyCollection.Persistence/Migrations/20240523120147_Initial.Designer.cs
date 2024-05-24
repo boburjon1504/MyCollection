@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyCollection.Persistence.Migrations
 {
     [DbContext(typeof(CollectionDbContext))]
-    [Migration("20240519163616_Initial")]
+    [Migration("20240523120147_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -199,7 +199,7 @@ namespace MyCollection.Persistence.Migrations
             modelBuilder.Entity("MyCollection.Domain.Entities.Collection", b =>
                 {
                     b.HasOne("MyCollection.Domain.Entities.User", "Owner")
-                        .WithMany()
+                        .WithMany("Collections")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -279,6 +279,11 @@ namespace MyCollection.Persistence.Migrations
             modelBuilder.Entity("MyCollection.Domain.Entities.Comment", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("MyCollection.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Collections");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,7 +9,7 @@ internal class CollectionConfiguration : IEntityTypeConfiguration<Collection>
     {
         builder
             .HasOne(c => c.Owner)
-            .WithMany()
+            .WithMany(u => u.Collections)
             .HasForeignKey(c => c.OwnerId);
     }
 }
