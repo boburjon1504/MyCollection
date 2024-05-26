@@ -114,38 +114,50 @@
     <hr class="w-100" />
 
 
-    <div class="d-flex flex-column justify-content-center align-items-center p-5">
-        <p class="fw-bold p-0 m-0">You don't have any collection yet. </p>
-        <p class="fw-bold p-0 m-0">If you want to create new one click the button below.</p>
-        <button class="btn btn-success m-4">Create Collection</button>
+    <div class="card text-center bg-dark myForm w-100">
+        <div class="card-header fw-bolder fs-4">
+            My collections
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                <p class="fw-bold p-0 m-0">You don't have any collection yet. </p>
+                <p class="fw-bold p-0 m-0">If you want to create new one click the button below.</p>
+                <button class="btn btn-success m-4">Create Collection</button>
+            </div>
+            <table class="table">
+                <thead class="text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Collection name</th>
+                        <th>Type</th>
+                        <th>Created date</th>
+                        <th>Items count</th>
+                        <th>Total Likes</th>
+                        <th>Total Comments</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @for (var i = 0; i < 10; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>My ideas</td>
+                            <td>Book</td>
+                            <td>@DateTime.Now.ToLongDateString()</td>
+                            <td>15</td>
+                            <td>154</td>
+                            <td>30</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-body-secondary">
+            2 days ago
+        </div>
     </div>
-    <table class="table">
-        <thead class="text-center">
-            <tr>
-                <th>#</th>
-                <th>Collection name</th>
-                <th>Type</th>
-                <th>Created date</th>
-                <th>Items count</th>
-                <th>Total Likes</th>
-                <th>Total Comments</th>
-            </tr>
-        </thead>
-        <tbody class="text-center">
-            @for (var i = 0; i < 10; i++)
-            {
-                <tr>
-                    <td>@(i+1)</td>
-                    <td>My ideas</td>
-                    <td>Book</td>
-                    <td>@DateTime.Now.ToString("dd MMMM yyyy")</td>
-                    <td>15</td>
-                    <td>154</td>
-                    <td>30</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+    
 
     <partial name="~/Views/Account/Edit.cshtml" model="@Model.User"></partial>
     <partial name="~/Views/Account/Delete.cshtml" model="@Model.User"></partial>

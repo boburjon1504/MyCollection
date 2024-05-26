@@ -5,24 +5,110 @@
 }
 @model ModelForView
 
-<h1>BSDGSFGDSJS DSFDSJFDGS ASJDFGSFUSDSYGFF</h1>
-<h1>BSDGSFGDSJS DSFDSJFDGS ASJDFGSFUSDSYGFF</h1>
-<h1>BSDGSFGDSJS DSFDSJFDGS ASJDFGSFUSDSYGFF</h1>
-<h1>BSDGSFGDSJS DSFDSJFDGS ASJDFGSFUSDSYGFF</h1>
-<h1>BSDGSFGDSJS DSFDSJFDGS ASJDFGSFUSDSYGFF</h1>
-<h1>BSDGSFGDSJS DSFDSJFDGS ASJDFGSFUSDSYGFF</h1>
-<div class="">
-    <a class="btn btn-secondary dropdown-toggle" id="dropDown" role="button" aria-expanded="false">
-        Dropdown link
-    </a>
+<div class="d-flex flex-column gap-5">
+    <div class="card text-center bg-dark myForm">
+        <div class="card-header fw-bolder fs-4">
+            Latest items
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Collection</th>
+                        <th>Owner</th>
+                        <th>Posted date</th>
+                        <th>Likes</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < 5; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>Books</td>
+                            <td>My ideas</td>
+                            <td>bobur_jr</td>
+                            <td>@DateTime.Now.ToLongDateString()</td>
+                            <td>1000</td>
+                            <td>312</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-body-secondary">
+            <div class="d-flex justify-content-center">
+                <button type="button" class="border bg-transparent rounded-start">Prev</button>
+                <span class="border px-3">1</span>
+                <button type="button" class="border bg-transparent rounded-end">Next</button>
+            </div>
+        </div>
+    </div>
 
-    <ul class="dropdown-menu" id="dropMenu">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
-    </ul>
+    <div class="card text-center bg-dark myForm">
+        <div class="card-header fw-bolder fs-4">
+            Top 5 Biggest Collections
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Collection</th>
+                        <th>Owner</th>
+                        <th>Posted date</th>
+                        <th>Likes</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < 5; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>Books</td>
+                            <td>My ideas</td>
+                            <td>bobur_jr</td>
+                            <td>@DateTime.Now.ToLongDateString()</td>
+                            <td>1000</td>
+                            <td>312</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-body-secondary">
+           @*  <div class="d-flex justify-content-center">
+                <button type="button" class="border bg-transparent rounded-start">Prev</button>
+                <span class="border px-3">1</span>
+                <button type="button" class="border bg-transparent rounded-end">Next</button>
+            </div> *@
+        </div>
+    </div>
+
+    <div class="card text-center bg-dark myForm">
+        <div class="card-header fw-bolder fs-4">
+            Tags
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-wrap gap-3">
+                @for (var i = 0; i < 100; i++)
+                {
+                    <a class="btn btn-outline-secondary">#hello</a>
+                }
+            </div>
+        </div>
+        <div class="card-footer text-body-secondary">
+            2 days ago
+        </div>
+    </div>
 </div>
 
+
 <script>
-   
+
 </script>
