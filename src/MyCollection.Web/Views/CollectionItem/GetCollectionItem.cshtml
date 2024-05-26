@@ -1,0 +1,72 @@
+﻿@model ModelForView
+
+<div class="d-flex flex-column">
+    <div class="card mb-3 bg-dark myForm">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="/Images/github.jpg" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+            <div class="card-footer d-flex flex-column">
+                <p class="fw-bolder fs-3">Used tags</p>
+                <div class="d-flex flex-wrap gap-2">
+                    @for (var i = 0; i < 50; i++)
+                    {
+                        <a class="btn btn-outline-secondary">#tag</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card text-center bg-dark myForm d-flex flex-column" style="height:800px">
+        <div class="card-header fw-bolder ">
+            Comments
+        </div>
+        <div class="card-body p-0 d-flex flex-column overflow-auto" id="messageBox">
+            <p>No comments yet</p>
+            @for (var i = 0; i < 100; i++)
+            {
+                <div class="d-flex p-2 border-bottom position-relative">
+                    <div class="position-absolute d-flex gap-1" style="top:3px;left:68px">
+                        <a class="text-white userInput card-link" asp-controller="Account" asp-action="Profile" asp-route-userName="@Model.User.UserName">@Model.User.UserName</a>
+                        <p> • @DateTime.Now.ToString("dd-mm-yyyy")</p>
+                    </div>
+                    <img src="/Images/github.jpg" class="rounded-circle" style="height:45px;width:45px" />
+                    <p class="text-start p-3">         Assalomu alaykum, ishlariz yaxshimi aka bu narsalarni amalda qnday qilib qollasek boladi chunki bu narsalar juda ham yaxshi emas o`ylashim boyicha biz yoshlar bu narsalarni amalda qollashni organishimiz kera</p>
+                </div>
+            }
+        </div>
+        <div class="card-footer text-body-secondary d-flex gap-3">
+            <input type="text" id="message" placeholder="Type message" class="form-control bg-dark text-white userInput " />
+            <button type="button" id="sendButton" class="btn btn-outline-success">Send</button>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const myDiv = document.getElementById('messageBox');
+            setTimeout(function () {
+                myDiv.scrollTop = myDiv.scrollHeight;
+            }, 10);
+        })
+    </script>
+}
+<script>
+    document.getElementById("sendButton").addEventListener("click", () => {
+        var input = document.getElementById("message");
+        console.log("send btn is now working")
+        console.log(input.value);
+
+    })
+</script>

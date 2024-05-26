@@ -16,7 +16,7 @@
             @if (Model.User.ImgPath is not null)
             {
                 <img src="@Model.User.ImgPath
-                                                                                    " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
+                                                                                        " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
             }
             else
             {
@@ -141,7 +141,9 @@
                     {
                         <tr>
                             <td>@(i + 1)</td>
-                            <td>My ideas</td>
+                            <td>
+                                <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton">My ideas</a>
+                            </td>
                             <td>Book</td>
                             <td>@DateTime.Now.ToLongDateString()</td>
                             <td>15</td>
@@ -157,7 +159,7 @@
         </div>
     </div>
 
-    
+
 
     <partial name="~/Views/Account/Edit.cshtml" model="@Model.User"></partial>
     <partial name="~/Views/Account/Delete.cshtml" model="@Model.User"></partial>

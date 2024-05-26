@@ -14,7 +14,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
         return RedirectToAction("Index", "Home");
     }
 
-
+    [HttpGet("/profile/{userName}")]
     public async ValueTask<IActionResult> Profile(string userName)
     {
         var user = await userService.GetByUserNameAsync(userName);

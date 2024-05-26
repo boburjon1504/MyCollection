@@ -1,0 +1,60 @@
+﻿@model ModelForView
+
+
+<div class="d-flex flex-column">
+    <div class="card mb-3 bg-dark myForm">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="/Images/github.jpg" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card text-center bg-dark myForm w-100">
+        <div class="card-header fw-bolder fs-4">
+            Collection Items
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                <p class="fw-bold p-0 m-0">You don't have any collection yet. </p>
+                <p class="fw-bold p-0 m-0">If you want to create new one click the button below.</p>
+                <button class="btn btn-success m-4">Create Collection</button>
+            </div>
+            <table class="table">
+                <thead class="text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Created date</th>
+                        <th>Likes</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @for (var i = 0; i < 10; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>
+                                <a asp-controller="CollectionItem" asp-action="GetCollectionItem" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton" asp-route-itemName="hello">Hello</a>
+                            </td>
+                            <td>@DateTime.Now.ToLongDateString()</td>
+                            <td>154</td>
+                            <td>30</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-body-secondary">
+            2 days ago
+        </div>
+    </div>
+</div>
