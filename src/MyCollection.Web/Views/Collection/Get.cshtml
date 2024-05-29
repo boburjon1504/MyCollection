@@ -1,0 +1,113 @@
+﻿@using MyCollection.Domain.Enums
+@model ModelForView
+
+
+<div class="card text-center bg-dark myForm w-100 mt-3">
+    <div class="card-header fw-bolder fs-4 d-flex justify-content-center justify-content-lg-between justify-content-md-between">
+        <p class="fs-5 m-0 d-none d-md-block d-lg-block">Collections</p>
+        <div class="d-flex gap-3 justify-content-start">
+            <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
+            <button type="submit" class="btn btn-outline-success">Search</button>
+            <select class="bg-dark userInput form-select text-white">
+                <option>Men</option>
+                <option>Men</option>
+                <option>Men</option>
+                <option>Men</option>
+            </select>
+            <button type="button" id="create" class="btn btn-success">
+                Create
+            </button>
+
+        </div>
+    </div>
+    <div class="card-body">
+        @if (ViewBag.Collections.Count == 0)
+        {
+            <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                <p class="fw-bold p-0 m-0">No collections yet. </p>
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead class="text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Collection name</th>
+                        <th>Type</th>
+                        <th>Owner</th>
+                        <th>Created date</th>
+                        <th>Items count</th>
+                        <th>Total Likes</th>
+                        <th>Total Comments</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @for (var i = 0; i < ViewBag.Collections.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>
+                                <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@ViewBag.Collections[i].Owner.UserName" asp-route-collectionName="@ViewBag.Collections[i].Name">@ViewBag.Collections[i].Name</a>
+                            </td>
+                            <td>@ViewBag.Collections[i].Type.ToString()</td>
+                            <td>
+                                <a asp-controller="Account" asp-action="Profile" asp-route-userName="@ViewBag.Collections[i].Owner.UserName">@ViewBag.Collections[i].Owner.UserName</a>
+                            </td>
+                            <td>@ViewBag.Collections[i].CreatedDate.ToLocalTime()</td>
+                            <td>@ViewBag.Collections[i].ItemsCount</td>
+                            <td>154</td>
+                            <td>30</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="card-footer text-body-secondary">
+        <div class="d-flex justify-content-center">
+            <button type="button" class="border bg-transparent rounded-start">Prev</button>
+            <span class="border px-3">1</span>
+            <button type="button" class="border bg-transparent rounded-end">Next</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="warning" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark myForm">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Warning</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                To create content, please log in or sign up.
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    var newCollection = new Collection();
+}
+<partial name="~/Views/Collection/Create.cshtml" model="newCollection"></partial>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+    var a = `@User.Identity.IsAuthenticated`;
+
+    document.getElementById('create').addEventListener("click", () => {
+        console.log("create button is working")
+        if (a != 'True') {
+            console.log("if is working")
+            $("#warning").modal('show')
+        } else {
+            $("#createCollection").modal('show')
+        }
+    })
+</script>

@@ -16,7 +16,7 @@
             @if (Model.User.ImgPath is not null)
             {
                 <img src="@Model.User.ImgPath
-                                                                                        " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
+                                                                                            " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
             }
             else
             {
@@ -115,14 +115,29 @@
 
 
     <div class="card text-center bg-dark myForm w-100">
-        <div class="card-header fw-bolder fs-4">
-            My collections
+        <div class="card-header fw-bolder fs-4 d-flex justify-content-center justify-content-lg-between justify-content-md-between">
+            <p class="fs-5 m-0 d-none d-md-block d-lg-block">My Collections</p>
+            <div class="d-flex gap-3 justify-content-start">
+                <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
+                <button type="submit" class="btn btn-outline-success">Search</button>
+                <select class="bg-dark userInput form-select text-white">
+                    <option>Men</option>
+                    <option>Men</option>
+                    <option>Men</option>
+                    <option>Men</option>
+                </select>
+                @if (Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
+                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString())
+                {
+                    <button type="button" class="btn btn-success">
+                        Create
+                    </button>
+                }
+            </div>
         </div>
         <div class="card-body">
             <div class="d-flex flex-column justify-content-center align-items-center p-5">
-                <p class="fw-bold p-0 m-0">You don't have any collection yet. </p>
-                <p class="fw-bold p-0 m-0">If you want to create new one click the button below.</p>
-                <button class="btn btn-success m-4">Create Collection</button>
+                <p class="fw-bold p-0 m-0">No collections yet. </p>
             </div>
             <table class="table">
                 <thead class="text-center">

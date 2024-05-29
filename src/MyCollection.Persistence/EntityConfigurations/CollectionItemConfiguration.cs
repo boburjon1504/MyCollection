@@ -13,7 +13,7 @@ internal class CollectionItemConfiguration : IEntityTypeConfiguration<Collection
             .HasForeignKey(i => i.OwnerId);
 
         builder
-            .HasOne<Collection>()
+            .HasOne(i=>i.Collection)
             .WithMany(c => c.Items)
             .HasForeignKey(i => i.CollectionId);
     }

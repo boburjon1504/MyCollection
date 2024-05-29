@@ -20,12 +20,17 @@
 <body data-bs-theme="dark" style="padding-top:90px">
     <header>
         <nav class="navbar border-bottom navbar-expand-lg mb-3 fixed-top bg-dark myForm">
-            <div class="container">
-                <a class="navbar-brand fs-2" asp-controller="Home" asp-action="Index">My collection</a>
-                <input class="border rounded-pill bg-dark px-3 userInput" type="search" placeholder="Search" style="height:40px;width:250px" />
-                <button class="navbar-toggler border text-black shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <div class="container d-flex justify-content-end justify-content-md-between">
+                <a class="navbar-brand fs-2 d-none d-lg-block d-md-block d-sm-block" asp-controller="Home" asp-action="Index">My collection</a>
+                <div class="d-flex gap-3 justify-content-between flex-fill">
+                    <div class="d-flex">
+                        <input class="border form-control text-white bg-dark px-3 userInput flex-grow-1" type="search" placeholder="Search" />
+                        <button class="btn btn-outline-info">Search</button>
+                    </div>
+                    <button class="navbar-toggler border text-black shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
 
                 <div class="sidebar offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 
@@ -36,17 +41,17 @@
 
                     <div class="offcanvas-body d-flex flex-lg-row flex-column p-4 p-lg-0">
                         <ul class="navbar-nav justify-content-center align-items-center fs-5 flex-grow-1 pe-3">
-                            <li class="nav-item mx-2">
-                                <a class="nav-link active" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
                             @* <li class="nav-item mx-2">
                             <a class="nav-link active" href="#about">About</a>
                             </li> *@
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown mx-2 bg-tra">
                                 <a class="nav-link active dropdown-toggle" id="dropDown" dropdown role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown
+                                    Menu
                                 </a>
-                                <ul class="dropdown-menu bg-dark userInput" id="dropMenu">
+                                <ul class="dropdown-menu bg-dark userInput" aria-labelledby="navbarDropdown" id="dropMenu">
+                                    <li>
+                                        <a class="dropdown-item nav-link text-center" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
+                                    </li>
                                     @if (Context.User.Identity.IsAuthenticated && Model.User.Role.Equals(Role.Admin))
                                     {
                                         <li><a class="dropdown-item nav-link text-center" asp-controller="UserManagement" asp-action="users">Action</a></li>
@@ -56,6 +61,9 @@
                                             <hr class="dropdown-divider">
                                         </li>
                                     }
+
+                                    <li><a class="dropdown-item nav-link text-center" asp-controller="Collection" asp-action="Get">Collections</a></li>
+                                    <li><a class="dropdown-item nav-link text-center" asp-controller="CollectionItem" asp-action="Get">Items</a></li>
                                     <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 </ul>
                             </li>

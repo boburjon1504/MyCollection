@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyCollection.Persistence.Migrations
 {
     [DbContext(typeof(CollectionDbContext))]
-    [Migration("20240523120147_Initial")]
-    partial class Initial
+    [Migration("20240529045019_AddedEntities")]
+    partial class AddedEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace MyCollection.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ItemsCount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -54,7 +57,8 @@ namespace MyCollection.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwnerId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Collections");
                 });
@@ -68,12 +72,22 @@ namespace MyCollection.Persistence.Migrations
                     b.Property<Guid>("CollectionId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("integer");
+
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("ImgPath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -129,6 +143,24 @@ namespace MyCollection.Persistence.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("MyCollection.Domain.Entities.ItemTag", b =>
+                {
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ItemId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ItemTag");
+                });
+
             modelBuilder.Entity("MyCollection.Domain.Entities.Like", b =>
                 {
                     b.Property<Guid>("Id")
@@ -148,6 +180,24 @@ namespace MyCollection.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("MyCollection.Domain.Entities.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Tag");
                 });
 
             modelBuilder.Entity("MyCollection.Domain.Entities.User", b =>
@@ -209,7 +259,7 @@ namespace MyCollection.Persistence.Migrations
 
             modelBuilder.Entity("MyCollection.Domain.Entities.CollectionItem", b =>
                 {
-                    b.HasOne("MyCollection.Domain.Entities.Collection", null)
+                    b.HasOne("MyCollection.Domain.Entities.Collection", "Collection")
                         .WithMany("Items")
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,6 +270,8 @@ namespace MyCollection.Persistence.Migrations
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Collection");
 
                     b.Navigation("Owner");
                 });
@@ -249,6 +301,25 @@ namespace MyCollection.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyCollection.Domain.Entities.ItemTag", b =>
+                {
+                    b.HasOne("MyCollection.Domain.Entities.CollectionItem", "Item")
+                        .WithMany("ItemTags")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyCollection.Domain.Entities.Tag", "Tag")
+                        .WithMany("ItemTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("MyCollection.Domain.Entities.Like", b =>
                 {
                     b.HasOne("MyCollection.Domain.Entities.CollectionItem", null)
@@ -273,12 +344,19 @@ namespace MyCollection.Persistence.Migrations
                 {
                     b.Navigation("Comments");
 
+                    b.Navigation("ItemTags");
+
                     b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("MyCollection.Domain.Entities.Comment", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("MyCollection.Domain.Entities.Tag", b =>
+                {
+                    b.Navigation("ItemTags");
                 });
 
             modelBuilder.Entity("MyCollection.Domain.Entities.User", b =>

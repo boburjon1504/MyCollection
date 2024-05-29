@@ -1,0 +1,60 @@
+﻿@model Collection;
+
+<div class="modal fade" id="createCollection" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark myForm">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create collection</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form enctype="multipart/form-data" method="post" id="collectionForm">
+                <div class="modal-body d-flex flex-column gap-3">
+                    <div>
+                        <label for="name" class="mb-1">Name</label>
+                        <input id="name" asp-for="Name" class="form-control bg-dark text-white userInput" />
+                    </div>
+                    <div>
+                        <label for="type" class="mb-1">Collection type</label>
+                        <select id="type" asp-for="Type" class="form-select bg-dark text-white userInput" asp-items="Html.GetEnumSelectList<CollectionType>()"></select>
+                    </div>
+                    <div>
+                        <label for="img" class="mb-1">Img</label>
+                        <input asp-for="ImgForm" class="form-control bg-dark text-white userInput" />
+                    </div>
+                    <div class="d-flex flex-column">
+                        <input id="myModelProperty" hidden asp-for="Description" />
+                        <input id="myModelProperty" hidden value="@Guid.Parse(User.Claims.FirstOrDefault(c=>c.Type.Equals("UserId")).Value)" asp-for="OwnerId" />
+                        <label for="editor">Description</label>
+                        <div id="editor"></div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" asp-controller="Collection" asp-action="Create" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+
+    });
+
+    function handleSubmit() {
+        var quillContent = quill.root.innerHTML; // Get the HTML content from Quill
+        document.getElementById('myModelProperty').value = quillContent;
+        console.log(quillContent);
+    }
+
+    document.getElementById("collectionForm").addEventListener("submit", (e) => {
+
+        handleSubmit();
+    })
+
+</script>

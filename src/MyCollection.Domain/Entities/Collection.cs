@@ -1,5 +1,7 @@
-﻿using MyCollection.Domain.Common.Auditables;
+﻿using Microsoft.AspNetCore.Http;
+using MyCollection.Domain.Common.Auditables;
 using MyCollection.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyCollection.Domain.Entities;
 public class Collection : Entity
@@ -13,10 +15,15 @@ public class Collection : Entity
     public CollectionType Type { get; set; }
 
     public DateTimeOffset CreatedDate { get; set; }
+
+    public int ItemsCount { get; set; }
     
     public string ImgPath { get; set; } = default!;
 
     public ICollection<CollectionItem> Items { get; set; } = new List<CollectionItem>();
 
     public User Owner { get; set; }
+
+    [NotMapped]
+    public IFormFile ImgForm { get; set; }
 }

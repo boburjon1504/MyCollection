@@ -7,14 +7,14 @@ namespace MyCollection.Web.Controllers;
 [Authorize]
 public class AccountController(IUserService userService, IWebHostEnvironment webHost, IImgService imgService) : Controller
 {
+
     public IActionResult Logout()
     {
         Response.Cookies.Delete("token");
-
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpGet("/profile/{userName}")]
+    [HttpGet]
     public async ValueTask<IActionResult> Profile(string userName)
     {
         var user = await userService.GetByUserNameAsync(userName);

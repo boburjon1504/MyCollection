@@ -1,57 +1,97 @@
-﻿@model ModelForView
+﻿@using MyCollection.Domain.Enums
+@using System.Security.Claims
+@model ModelForView
 
 
 <div class="d-flex flex-column">
-    <div class="card mb-3 bg-dark myForm">
+    <div class="card mt-4 mb-4 bg-dark myForm">
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="/Images/github.jpg" class="img-fluid rounded-start" alt="...">
+                <img src="@ViewBag.Collection.ImgPath" class="img-fluid rounded-start" alt="...">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="card-title d-flex justify-content-between border-bottom align-items-center">
+                        <p class="fs-4"> @ViewBag.Collection.Name</p>
+                        <div class="d-flex justify-content-center gap-2">Type <p class="border rounded-3 px-2">@ViewBag.Collection.Type.ToString()</p></div>
+                        <div class="d-flex gap-3 justify-content-center align-items-center">
+                            <p class="text-center fs-5">Owner</p>
+                            <a class="d-flex gap-2 justify-content-center border rounded-3 align-items-center" asp-controller="Account" asp-action="Profile" asp-route-userName="@ViewBag.Collection.Owner.UserName">
+                                @if (ViewBag.Collection.Owner.ImgPath is null)
+                                {
+                                    <img src="/Images/github.jpg" class="rounded-circle" style="width:40px;height:40px" />
+                                }
+                                else
+                                {
+                                    <img src="@ViewBag.Collection.Owner.ImgPath" class="rounded-circle" style="width:50px;height:50px" />
+                                }
+                                @ViewBag.Collection.Owner.UserName
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Description</p>
+                        @(Html.Raw(ViewBag.Collection.Description))
+                    </div>
+                    <div class="card-text d-flex justify-content-between border-top">
+                        <p>Created date</p>
+                        <small class="text-secondary">@ViewBag.Collection.CreatedDate.ToString("dd MMM yyyy")</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="card text-center bg-dark myForm w-100">
-        <div class="card-header fw-bolder fs-4">
-            Collection Items
+        <div class="card-header fw-bolder fs-4 d-flex justify-content-center justify-content-lg-between justify-content-md-between">
+            <p class="fs-5 m-0 d-none d-md-block d-lg-block">Collection Items</p>
+            <div class="d-flex gap-3 justify-content-start">
+                <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
+                <button type="submit" class="btn btn-outline-success">Search</button>
+                @if (Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
+                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString())
+                {
+                    <button type="button" class="btn btn-success">
+                        Create
+                    </button>
+                }
+            </div>
         </div>
         <div class="card-body">
-            <div class="d-flex flex-column justify-content-center align-items-center p-5">
-                <p class="fw-bold p-0 m-0">You don't have any collection yet. </p>
-                <p class="fw-bold p-0 m-0">If you want to create new one click the button below.</p>
-                <button class="btn btn-success m-4">Create Collection</button>
-            </div>
-            <table class="table">
-                <thead class="text-center">
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Created date</th>
-                        <th>Likes</th>
-                        <th>Comments</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    @for (var i = 0; i < 10; i++)
-                    {
+            @if (ViewBag.Collection.ItemsCount == 0)
+            {
+                <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                    <p class="fw-bold p-0 m-0">No items yet. </p>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead class="text-center">
                         <tr>
-                            <td>@(i + 1)</td>
-                            <td>
-                                <a asp-controller="CollectionItem" asp-action="GetCollectionItem" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton" asp-route-itemName="hello">Hello</a>
-                            </td>
-                            <td>@DateTime.Now.ToLongDateString()</td>
-                            <td>154</td>
-                            <td>30</td>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created date</th>
+                            <th>Likes</th>
+                            <th>Comments</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="text-center">
+                        @for (var i = 0; i < 10; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <a asp-controller="CollectionItem" asp-action="GetCollectionItem" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton" asp-route-itemName="hello">Hello</a>
+                                </td>
+                                <td>@DateTime.Now.ToLongDateString()</td>
+                                <td>154</td>
+                                <td>30</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
         <div class="card-footer text-body-secondary">
             2 days ago

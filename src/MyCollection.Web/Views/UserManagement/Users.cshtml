@@ -8,6 +8,7 @@
 
         <thead>
             <tr>
+                <th class="text-center">#</th>
                 <th class="text-center">Username</th>
                 <th class="text-center">Firstname</th>
                 <th class="text-center">Lastname</th>
@@ -24,10 +25,11 @@
             {
                 c++;
                 <tr>
-                    <th class="d-flex justify-content-center align-items-center gap-4">
+                    <td class="text-center">@c</td>
+                    <td class="d-flex justify-content-center align-items-center gap-4" style="height:65.5px">
                         @if (user.ImgPath is not null)
                         {
-                            <img src="/@user.ImgPath" class="rounded-circle" style="width:40px;height:40px" />
+                            <img src="@user.ImgPath" class="rounded-circle" style="width:40px;height:40px" />
                         }
                         else
                         {
@@ -40,11 +42,11 @@
                                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
                             </svg>
                         </a>
-                    </th>
-                    <th class="text-center">@user.FirstName</th>
-                    <th class="text-center">@user.LastName</th>
-                    <th class="text-center">@user.Email</th>
-                    <th class="text-center">
+                    </td>
+                    <td class="text-center">@user.FirstName</td>
+                    <td class="text-center">@user.LastName</td>
+                    <td class="text-center">@user.Email</td>
+                    <td class="text-center">
                         @if (c % 2 == 0)
                         {
                             <button class="btn btn-outline-danger" disabled>Blocked</button>
@@ -53,7 +55,7 @@
                         {
                             <button class="btn btn-outline-success" disabled>Active</button>
                         }
-                    </th>
+                    </td>
                 </tr>
             }
         </tbody>

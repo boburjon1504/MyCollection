@@ -6,11 +6,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MyCollection.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class AddedEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Tag",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tag", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -40,6 +52,7 @@ namespace MyCollection.Persistence.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ItemsCount = table.Column<int>(type: "integer", nullable: false),
                     ImgPath = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -62,6 +75,9 @@ namespace MyCollection.Persistence.Migrations
                     CollectionId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    ImgPath = table.Column<string>(type: "text", nullable: false),
+                    LikesCount = table.Column<int>(type: "integer", nullable: false),
+                    CommentsCount = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -122,6 +138,31 @@ namespace MyCollection.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ItemTag",
+                columns: table => new
+                {
+                    TagId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ItemId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemTag", x => new { x.ItemId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_ItemTag_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ItemTag_Tag_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tag",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Likes",
                 columns: table => new
                 {
@@ -147,9 +188,10 @@ namespace MyCollection.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Collections_OwnerId",
+                name: "IX_Collections_OwnerId_Name",
                 table: "Collections",
-                column: "OwnerId");
+                columns: new[] { "OwnerId", "Name" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_CommentId",
@@ -182,6 +224,11 @@ namespace MyCollection.Persistence.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ItemTag_TagId",
+                table: "ItemTag",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Likes_ItemId",
                 table: "Likes",
                 column: "ItemId");
@@ -190,6 +237,12 @@ namespace MyCollection.Persistence.Migrations
                 name: "IX_Likes_UserId",
                 table: "Likes",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tag_Name",
+                table: "Tag",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -211,7 +264,13 @@ namespace MyCollection.Persistence.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
+                name: "ItemTag");
+
+            migrationBuilder.DropTable(
                 name: "Likes");
+
+            migrationBuilder.DropTable(
+                name: "Tag");
 
             migrationBuilder.DropTable(
                 name: "Items");
