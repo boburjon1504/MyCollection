@@ -23,9 +23,8 @@
                     </div>
                     <div class="d-flex flex-column">
                         <input id="myModelProperty" hidden asp-for="Description" />
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <input id="description" hidden value="@Guid.Parse(User.Claims.FirstOrDefault(c=>c.Type.Equals("UserId")).Value)" asp-for="OwnerId" />
+                        @if(User.Identity.IsAuthenticated){
+                        <input hidden value="@Guid.Parse(User.Claims.FirstOrDefault(c=>c.Type.Equals("UserId")).Value)" asp-for="OwnerId" />
                         }
                         <label for="editor">Description</label>
                         <div id="editor"></div>
@@ -51,7 +50,7 @@
 
     function handleSubmit() {
         var quillContent = quill.root.innerHTML; // Get the HTML content from Quill
-        document.getElementById('description').value = quillContent;
+        document.getElementById('myModelProperty').value = quillContent;
         console.log(quillContent);
     }
 

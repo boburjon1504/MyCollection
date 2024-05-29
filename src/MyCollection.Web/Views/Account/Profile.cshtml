@@ -158,7 +158,7 @@
                             <tr>
                                 <td>@(i + 1)</td>
                                 <td>
-                                    <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@ViewBag.User.UserName" asp-route-collectionName="@ViewBag.User.Collections[i]">@ViewBag.User.Collections[i].Name</a>
+                                    <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@ViewBag.User.UserName" asp-route-collectionName="@ViewBag.User.Collections[i].Name">@ViewBag.User.Collections[i].Name</a>
                                 </td>
                                 <td>@ViewBag.User.Collections[i].Type.ToString()</td>
                                 <td>@ViewBag.User.Collections[i].CreatedDate.ToString("dd MMM yyyy")</td>
