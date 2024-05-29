@@ -47,17 +47,23 @@
             Comments
         </div>
         <div class="card-body p-0 d-flex flex-column overflow-auto" id="messageBox">
-            <p>No comments yet</p>
-            @for (var i = 0; i < 100; i++)
+            @if (ViewBag.Item.Comments.Count == 0)
             {
-                <div class="d-flex p-2 border-bottom position-relative">
-                    <div class="position-absolute d-flex gap-1" style="top:3px;left:68px">
-                        <a class="text-white userInput card-link p-0 bg-transparent" asp-controller="Account" asp-action="Profile" asp-route-userName="@Model.User.UserName">@Model.User.UserName</a>
-                        <p> • @DateTime.Now.ToString("dd-mm-yyyy")</p>
+                <p>No comments yet</p>
+            }
+            else
+            {
+                @for (var i = 0; i < 100; i++)
+                {
+                    <div class="d-flex p-2 border-bottom position-relative">
+                        <div class="position-absolute d-flex gap-1" style="top:3px;left:68px">
+                            <a class="text-white userInput card-link p-0 bg-transparent" asp-controller="Account" asp-action="Profile" asp-route-userName="@Model.User.UserName">@Model.User.UserName</a>
+                            <p> • @DateTime.Now.ToString("dd-mm-yyyy")</p>
+                        </div>
+                        <img src="/Images/github.jpg" class="rounded-circle" style="height:45px;width:45px" />
+                        <p class="text-start p-3 mt-2">         Assalomu alaykum, ishlariz yaxshimi aka bu narsalarni amalda qnday qilib qollasek boladi chunki bu narsalar juda ham yaxshi emas o`ylashim boyicha biz yoshlar bu narsalarni amalda qollashni organishimiz kera</p>
                     </div>
-                    <img src="/Images/github.jpg" class="rounded-circle" style="height:45px;width:45px" />
-                    <p class="text-start p-3 mt-2">         Assalomu alaykum, ishlariz yaxshimi aka bu narsalarni amalda qnday qilib qollasek boladi chunki bu narsalar juda ham yaxshi emas o`ylashim boyicha biz yoshlar bu narsalarni amalda qollashni organishimiz kera</p>
-                </div>
+                }
             }
         </div>
         <div class="card-footer text-body-secondary d-flex gap-3">
@@ -69,6 +75,8 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/mySignalr.js"></script>
 @section Scripts {
     <script>
         $(document).ready(function () {

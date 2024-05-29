@@ -11,6 +11,7 @@ using MyCollection.Persistence.Brokers.Interfaces;
 using MyCollection.Persistence.DataContext;
 using MyCollection.Persistence.Repositories;
 using MyCollection.Persistence.Repositories.Interfaces;
+using MyCollection.Web.Hubs;
 using System.Net;
 using System.Text;
 
@@ -43,6 +44,8 @@ builder.Services.AddSingleton<ICacheBroker, LazyCacheBroker>();
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
 
+
+builder.Services.AddSignalR();
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -98,7 +101,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+app.MapHub<CommentHub>("/comment");
 
 app.MapControllerRoute(
     name: "default",
