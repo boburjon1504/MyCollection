@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyCollection.Persistence.Migrations
 {
     [DbContext(typeof(CollectionDbContext))]
-    [Migration("20240529100303_AddedEntities")]
+    [Migration("20240529183723_AddedEntities")]
     partial class AddedEntities
     {
         /// <inheritdoc />
@@ -121,7 +121,7 @@ namespace MyCollection.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ParentId")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("SendAt")
@@ -290,15 +290,15 @@ namespace MyCollection.Persistence.Migrations
 
                     b.HasOne("MyCollection.Domain.Entities.Comment", null)
                         .WithMany()
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentId");
 
-                    b.HasOne("MyCollection.Domain.Entities.User", null)
+                    b.HasOne("MyCollection.Domain.Entities.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("MyCollection.Domain.Entities.ItemTag", b =>

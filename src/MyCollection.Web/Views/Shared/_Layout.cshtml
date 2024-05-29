@@ -7,7 +7,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MyCollection</title>
@@ -88,13 +87,12 @@
                                         }
                                         else
                                         {
-                                            <img src="@Model.User.ImgPath" style="width:40px;height:40px;" />
-
+                                            <img id="userImgPath" src="@Model.User.ImgPath" style="width:40px;height:40px;" />
                                         }
                                     </div>
                                     @if (Model.User.UserName is not null)
                                     {
-                                        @Model.User.UserName
+                                        <p id="userUserName" class="m-0">@Model.User.UserName</p>
                                     }
                                     else
                                     {

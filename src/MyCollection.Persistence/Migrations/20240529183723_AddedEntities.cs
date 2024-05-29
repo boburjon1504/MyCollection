@@ -104,7 +104,7 @@ namespace MyCollection.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     SenderId = table.Column<Guid>(type: "uuid", nullable: false),
                     ItemId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ParentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ParentId = table.Column<Guid>(type: "uuid", nullable: true),
                     Message = table.Column<string>(type: "text", nullable: false),
                     SendAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CommentId = table.Column<Guid>(type: "uuid", nullable: true)
@@ -121,8 +121,7 @@ namespace MyCollection.Persistence.Migrations
                         name: "FK_Comments_Comments_ParentId",
                         column: x => x.ParentId,
                         principalTable: "Comments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Comments_Items_ItemId",
                         column: x => x.ItemId,

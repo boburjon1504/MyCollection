@@ -4,6 +4,7 @@ using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Entities;
 using MyCollection.Infrastructure.Services;
 using MyCollection.Web.Models;
+using System.Security.Claims;
 
 namespace MyCollection.Web.Controllers;
 public class CollectionItemController(IUserService userService, ICollectionItemService collectionItemService, IImgService imgService) : Controller
@@ -11,13 +12,21 @@ public class CollectionItemController(IUserService userService, ICollectionItemS
     [HttpGet]
     public async ValueTask<IActionResult> GetCollectionItem(string userName, string collectionName, string itemName)
     {
-        var user = await userService.GetByUserNameAsync(userName);
-
+        User user;
+        if (User.Identity.IsAuthenticated)
+        {
+            user = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier)).Value));
+        }
+        else
+        {
+            user = new User();
+        }
         var item = await collectionItemService
             .Get()
             .Include(i => i.Collection)
             .Include(i => i.Owner)
-            .Include(i=>i.Comments)
+            .Include(i => i.Comments)
+            .ThenInclude(c => c.Sender)
             .FirstOrDefaultAsync(i => i.Name.Equals(itemName));
 
         ViewBag.Item = item;
@@ -70,7 +79,7 @@ public class CollectionItemController(IUserService userService, ICollectionItemS
             .Include(i => i.Owner)
             .FirstOrDefaultAsync(i => i.Id == collectionItem.Id);
 
-        return RedirectToAction("GetCollection", "Collection" ,new { userName = item.Owner.UserName, collectionName = item.Collection.Name });
+        return RedirectToAction("GetCollection", "Collection", new { userName = item.Owner.UserName, collectionName = item.Collection.Name });
     }
 
 }

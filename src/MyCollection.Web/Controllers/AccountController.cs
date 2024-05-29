@@ -39,7 +39,7 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
     [HttpPost]
     public async ValueTask<IActionResult> UploadImg(ProfileImg profileImg)
     {
-        var requestUser = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserID")).Value));
+        var requestUser = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value));
 
         var user = await userService
             .Get()

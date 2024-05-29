@@ -13,7 +13,7 @@ internal class CommentConfiguration : IEntityTypeConfiguration<Comment>
             .HasForeignKey(c => c.ParentId);
 
         builder
-            .HasOne<User>()
+            .HasOne(c=>c.Sender)
             .WithMany()
             .HasForeignKey(c => c.SenderId);
 
