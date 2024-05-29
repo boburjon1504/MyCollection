@@ -39,46 +39,57 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="d-flex flex-column justify-content-center align-items-center p-5">
-            <p class="fw-bold p-0 m-0">No items yet. </p>
-        </div>
-        <table class="table">
-            <thead class="text-center">
-                <tr>
-                    <th>#</th>
-                    <th>Item name</th>
-                    <th>Type</th>
-                    <th>Collection name</th>
-                    <th>Owner</th>
-                    <th>Created date</th>
-                    <th>Items count</th>
-                    <th>Total Likes</th>
-                    <th>Total Comments</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                @for (var i = 0; i < 10; i++)
-                {
+        @if (ViewBag.Items.Count == 0)
+        {
+            <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                <p class="fw-bold p-0 m-0">No items yet. </p>
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead class="text-center">
                     <tr>
-                        <td>@(i + 1)</td>
-                        <td>
-                            <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton" asp-route-itemName="hello">Hello</a>
-                        </td>
-                        <td>Book</td>
-                        <td>
-                            <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton">My ideas</a>
-                        </td>
-                        <td>
-                            <a asp-controller="Account" asp-action="Profile" asp-route-userName="@Model.User.UserName">bobur_jr</a>
-                        </td>
-                        <td>@DateTime.Now.ToLongDateString()</td>
-                        <td>15</td>
-                        <td>154</td>
-                        <td>30</td>
+                        <th>#</th>
+                        <th>Item name</th>
+                        <th>Type</th>
+                        <th>Collection name</th>
+                        <th>Owner</th>
+                        <th>Created date</th>
+                        <th>Total Likes</th>
+                        <th>Total Comments</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="text-center">
+                    @for (var i = 0; i < ViewBag.Items.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>
+                                <a asp-controller="CollectionItem"
+                                   asp-action="GetCollectionItem"
+                                   asp-route-userName="@ViewBag.Items[i].Owner.UserName"
+                                   asp-route-collectionName="@ViewBag.Items[i].Collection.Name"
+                                   asp-route-itemName="@ViewBag.Items[i].Name">@ViewBag.Items[i].Name</a>
+                            </td>
+                            <td>@ViewBag.Items[i].Collection.Type.ToString()</td>
+                            <td>
+                                <a asp-controller="Collection"
+                                   asp-action="GetCollection"
+                                   asp-route-userName="@ViewBag.Items[i].Owner.UserName"
+                                   asp-route-collectionName="@ViewBag.Items[i].Collection.Name">@ViewBag.Items[i].Collection.Name</a>
+                            </td>
+                            <td>
+                                <a asp-controller="Account" asp-action="Profile" asp-route-userName="@ViewBag.Items[i].Owner.UserName">@ViewBag.Items[i].Owner.UserName</a>
+                            </td>
+                            <td>@ViewBag.Items[i].CreatedDate.ToString("dd MMM yyyy")</td>
+                            <td>@ViewBag.Items[i].LikesCount</td>
+                            <td>@ViewBag.Items[i].CommentsCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
     <div class="card-footer text-body-secondary">
         <div class="d-flex justify-content-center">
@@ -88,71 +99,10 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="createItem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark myForm">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create collection</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex flex-column gap-3">
-                <div>
-                    <label for="name" class="mb-1">Name</label>
-                    <input id="name" class="form-control bg-dark text-white userInput" />
-                </div>
-                <div>
-                    @{
-                        var a = new List<string> { "a", "bobur", "salom", "alekum" };
-                    }
-                    <label>Choose collection</label>
-                    <select class="form-select bg-dark text-white userInput d-flex" id="collectionList">
-                        <option>Select collection</option>
-                        @foreach (var i in a)
-                        {
-                            <option class="position-relative flex-fill">
-                                <p class="mx-5">@i</p>
-                                <p class="position-absolute" style="right:0px">
-                                    ( owner: 
-                                    <a asp-controller="Account" asp-action="Profile" asp-route-userName="bobur_jr">bobur_jr</a>
-                                    )
-                                </p>
-                            </option>
-                        }
-                    </select>
-                    
-                </div>
-                <div>
-                    <label for="img" class="mb-1">Created date</label>
-                    <input type="date" class="form-control bg-dark text-white userInput" />
-                </div>
-                <div>
-                    <label for="img" class="mb-1">Img</label>
-                    <input type="file" class="form-control bg-dark text-white userInput" />
-                </div>
-                <div class="d-flex flex-column">
-                    <label for="editor">Description</label>
-                    <div id="editor"></div>
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-center gap-2">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-
-<script>
-    var quill = new Quill('#editor', {
-        theme: 'snow',
-    });
-</script>
-
-
+@{
+    var newItem = new CollectionItem();
+}
+<partial name="~/Views/CollectionItem/Create.cshtml" model="newItem"></partial>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

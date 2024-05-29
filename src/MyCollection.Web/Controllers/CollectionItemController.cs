@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Entities;
 using MyCollection.Infrastructure.Services;
@@ -8,9 +9,18 @@ namespace MyCollection.Web.Controllers;
 public class CollectionItemController(IUserService userService, ICollectionItemService collectionItemService, IImgService imgService) : Controller
 {
     [HttpGet]
-    public async ValueTask<IActionResult> GetCollectionItem(string userName,string collectionName,string itemName)
+    public async ValueTask<IActionResult> GetCollectionItem(string userName, string collectionName, string itemName)
     {
         var user = await userService.GetByUserNameAsync(userName);
+
+        var item = await collectionItemService
+            .Get()
+            .Include(i => i.Collection)
+            .Include(i => i.Owner)
+            .Include(i=>i.Comments)
+            .FirstOrDefaultAsync(i => i.Name.Equals(itemName));
+
+        ViewBag.Item = item;
 
         return View(new ModelForView
         {
@@ -22,7 +32,7 @@ public class CollectionItemController(IUserService userService, ICollectionItemS
     [HttpGet]
     public async ValueTask<IActionResult> Get()
     {
-        var collections = await collectionItemService.GetAsync(HttpContext.RequestAborted);
+        var items = await collectionItemService.Get().Include(i => i.Owner).Include(i => i.Collection).ToListAsync();
         User user;
 
         if (User.Identity.IsAuthenticated)
@@ -34,7 +44,7 @@ public class CollectionItemController(IUserService userService, ICollectionItemS
             user = new User();
         }
 
-        ViewBag.Collections = collections;
+        ViewBag.Items = items;
 
         return View(new ModelForView
         {
@@ -49,13 +59,18 @@ public class CollectionItemController(IUserService userService, ICollectionItemS
         collectionItem.Id = Guid.NewGuid();
 
         collectionItem.ImgPath = await imgService.SaveImgAsync(collectionItem.ImgForm, collectionItem.Id);
+        collectionItem.CreatedDate = DateTimeOffset.UtcNow;
         var newCollection = await collectionItemService.CreateAsync(collectionItem, saveChanges: true, cancellationToken: HttpContext.RequestAborted);
 
         User user = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value));
 
-        ViewBag.Collections = newCollection;
+        var item = await collectionItemService
+            .Get()
+            .Include(i => i.Collection)
+            .Include(i => i.Owner)
+            .FirstOrDefaultAsync(i => i.Id == collectionItem.Id);
 
-        return RedirectToAction("Get");
+        return RedirectToAction("GetCollection", "Collection" ,new { userName = item.Owner.UserName, collectionName = item.Collection.Name });
     }
 
 }

@@ -48,17 +48,18 @@
             <div class="d-flex gap-3 justify-content-start">
                 <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
                 <button type="submit" class="btn btn-outline-success">Search</button>
-                @if (Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
-                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString())
+                @if (Context.User.Identity.IsAuthenticated && (
+                Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
+                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString()))
                 {
-                    <button type="button" class="btn btn-success">
+                    <button type="button" id="create" class="btn btn-success">
                         Create
                     </button>
                 }
             </div>
         </div>
         <div class="card-body">
-            @if (ViewBag.Collection.ItemsCount == 0)
+            @if (ViewBag.Collection.Items.Count == 0)
             {
                 <div class="d-flex flex-column justify-content-center align-items-center p-5">
                     <p class="fw-bold p-0 m-0">No items yet. </p>
@@ -77,16 +78,19 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        @for (var i = 0; i < 10; i++)
+                        @for (var i = 0; i < ViewBag.Collection.Items.Count; i++)
                         {
                             <tr>
                                 <td>@(i + 1)</td>
                                 <td>
-                                    <a asp-controller="CollectionItem" asp-action="GetCollectionItem" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton" asp-route-itemName="hello">Hello</a>
+                                    <a asp-controller="CollectionItem" asp-action="GetCollectionItem"
+                                       asp-route-userName="@ViewBag.Collection.Owner.UserName"
+                                       asp-route-collectionName="@ViewBag.Collection.Name"
+                                       asp-route-itemName="@ViewBag.Collection.Items[i].Name">@ViewBag.Collection.Items[i].Name</a>
                                 </td>
-                                <td>@DateTime.Now.ToLongDateString()</td>
-                                <td>154</td>
-                                <td>30</td>
+                                <td>@ViewBag.Collection.Items[i].CreatedDate.ToString("dd MMM yyy")</td>
+                                <td>@ViewBag.Collection.Items[i].LikesCount</td>
+                                <td>@ViewBag.Collection.Items[i].CommentsCount</td>
                             </tr>
                         }
                     </tbody>
@@ -98,3 +102,43 @@
         </div>
     </div>
 </div>
+
+@{
+    var newItem = new CollectionItem
+            {
+                Collection = ViewBag.Collection
+            };
+}
+<partial name="~/Views/CollectionItem/Create.cshtml" model="newItem"></partial>
+
+<div class="modal fade" id="warning" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark myForm">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Info</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body fs-6">
+                To create content, please log in or sign up.
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+    var isAuthonticated = `@User.Identity.IsAuthenticated`
+    if (isAuthonticated === 'True') {
+        document.getElementById('create').addEventListener("click", () => {
+
+            $("#createItem").modal('show')
+
+        })
+    }
+</script>

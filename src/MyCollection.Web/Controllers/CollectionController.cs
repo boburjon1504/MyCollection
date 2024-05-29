@@ -5,15 +5,27 @@ using MyCollection.Domain.Entities;
 using MyCollection.Web.Models;
 
 namespace MyCollection.Web.Controllers;
-public class CollectionController(IUserService userService,ICollectionService collectionService,IImgService imgService) : Controller
+public class CollectionController(IUserService userService, ICollectionService collectionService, IImgService imgService) : Controller
 {
 
     [HttpGet]
-    public async ValueTask<IActionResult> GetCollection(string userName,string collectionName)
+    public async ValueTask<IActionResult> GetCollection(string userName, string collectionName)
     {
-        var user = await userService.GetByUserNameAsync(userName);
+        User user;
+        if (User.Identity.IsAuthenticated)
+        {
+            user = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value));
+        }
+        else
+        {
+            user = new User();
+        }
+        var collection = await collectionService.Get()
+            .Include(c => c.Owner)
+            .Include(c => c.Items)
+            .FirstOrDefaultAsync(c => c.Name.Equals(collectionName));
 
-        ViewBag.Collection = await collectionService.Get().FirstOrDefaultAsync(c => c.Name.Equals(collectionName));
+        ViewBag.Collection = collection;
 
         return View(new ModelForView
         {
@@ -25,7 +37,7 @@ public class CollectionController(IUserService userService,ICollectionService co
     [HttpGet]
     public async ValueTask<IActionResult> Get()
     {
-        var collections = await collectionService.Get().Include(c=>c.Owner).ToListAsync();
+        var collections = await collectionService.Get().Include(c => c.Owner).ToListAsync();
         User user;
 
         if (User.Identity.IsAuthenticated)
@@ -51,9 +63,9 @@ public class CollectionController(IUserService userService,ICollectionService co
     {
         collection.Id = Guid.NewGuid();
 
-        collection.ImgPath = await imgService.SaveImgAsync(collection.ImgForm,collection.Id);
+        collection.ImgPath = await imgService.SaveImgAsync(collection.ImgForm, collection.Id);
         var newCollection = await collectionService.CreateAsync(collection, saveChanges: true, cancellationToken: HttpContext.RequestAborted);
-        
+
         User user = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value));
 
         ViewBag.Collections = newCollection;

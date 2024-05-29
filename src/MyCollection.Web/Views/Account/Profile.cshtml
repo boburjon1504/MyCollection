@@ -13,10 +13,10 @@
     <div class="m-4 d-flex flex-column flex-lg-row flex-md-row gap-lg-3">
 
         <div class="d-flex flex-column justify-content-center align-items-center p-4">
-            @if (Model.User.ImgPath is not null)
+            @if (ViewBag.User.ImgPath is not null)
             {
-                <img src="@Model.User.ImgPath
-                                                                                            " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
+                <img src="@ViewBag.User.ImgPath
+                                                                                                        " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
             }
             else
             {
@@ -24,12 +24,12 @@
             }
 
             @if (Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
-            || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString())
+            || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == ViewBag.User.Id.ToString())
             {
                 <form class="d-flex flex-column justify-content-center gap-3 mt-3" id="editForm" enctype="multipart/form-data" method="post">
                     <input id="uploadImg" class="d-none" accept="image/*" asp-for="ProfileImg.Img" />
                     <input type="text" hidden asp-for="ProfileImg.UserId" />
-                    @if (Model.User.ImgPath is not null)
+                    @if (ViewBag.User.ImgPath is not null)
                     {
                         <a class="btn btn-outline-danger" asp-controller="Account" asp-action="DeletImg" asp-route-userId="@Model.ProfileImg.UserId">Delete image</a>
                     }
@@ -54,7 +54,7 @@
                 <label class="col-form-label">Firstname</label>
                 <div>
                     <div class="form-control userInput bg-dark text-white">
-                        @Model.User.FirstName
+                        @ViewBag.User.FirstName
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                 <label class="col-form-label">Lastname</label>
                 <div>
                     <div class="form-control userInput bg-dark text-white">
-                        @Model.User.LastName
+                        @ViewBag.User.LastName
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                 <label class="col-form-label">Email</label>
                 <div>
                     <div class="form-control userInput bg-dark text-white">
-                        @Model.User.Email
+                        @ViewBag.User.Email
                     </div>
                 </div>
             </div>
@@ -78,12 +78,12 @@
                 <label class="col-form-label">Username</label>
                 <div>
                     <div class="form-control userInput bg-dark text-white">
-                        @Model.User.UserName
+                        @ViewBag.User.UserName
                     </div>
                 </div>
             </div>
             @if (Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
-            || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString())
+            || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == ViewBag.User.Id.ToString())
             {
                 <div class="d-flex flex-column flex-lg-row flex-column-reverse justify-content-end position-absolute gap-3 col-4"
                      style="top:40px;right:40px">
@@ -120,14 +120,10 @@
             <div class="d-flex gap-3 justify-content-start">
                 <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
                 <button type="submit" class="btn btn-outline-success">Search</button>
-                <select class="bg-dark userInput form-select text-white">
-                    <option>Men</option>
-                    <option>Men</option>
-                    <option>Men</option>
-                    <option>Men</option>
+                <select class="bg-dark userInput form-select text-white" asp-items="Html.GetEnumSelectList<CollectionType>()">
                 </select>
                 @if (Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
-                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString())
+                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == ViewBag.User.Id.ToString())
                 {
                     <button type="button" class="btn btn-success">
                         Create
@@ -136,38 +132,44 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="d-flex flex-column justify-content-center align-items-center p-5">
-                <p class="fw-bold p-0 m-0">No collections yet. </p>
-            </div>
-            <table class="table">
-                <thead class="text-center">
-                    <tr>
-                        <th>#</th>
-                        <th>Collection name</th>
-                        <th>Type</th>
-                        <th>Created date</th>
-                        <th>Items count</th>
-                        <th>Total Likes</th>
-                        <th>Total Comments</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    @for (var i = 0; i < 10; i++)
-                    {
+            @if (ViewBag.User.Collections.Count == 0)
+            {
+                <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                    <p class="fw-bold p-0 m-0">No collections yet. </p>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead class="text-center">
                         <tr>
-                            <td>@(i + 1)</td>
-                            <td>
-                                <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@Model.User.UserName" asp-route-collectionName="MyColleciton">My ideas</a>
-                            </td>
-                            <td>Book</td>
-                            <td>@DateTime.Now.ToLongDateString()</td>
-                            <td>15</td>
-                            <td>154</td>
-                            <td>30</td>
+                            <th>#</th>
+                            <th>Collection name</th>
+                            <th>Type</th>
+                            <th>Created date</th>
+                            <th>Items count</th>
+                            <th>Total Likes</th>
+                            <th>Total Comments</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="text-center">
+                        @for (var i = 0; i < ViewBag.User.Collections.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@ViewBag.User.UserName" asp-route-collectionName="@ViewBag.User.Collections[i]">@ViewBag.User.Collections[i].Name</a>
+                                </td>
+                                <td>@ViewBag.User.Collections[i].Type.ToString()</td>
+                                <td>@ViewBag.User.Collections[i].CreatedDate.ToString("dd MMM yyyy")</td>
+                                <td>@ViewBag.User.Collections[i].ItemsCount</td>
+                                <td>154</td>
+                                <td>30</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
         <div class="card-footer text-body-secondary">
             2 days ago
@@ -176,8 +178,8 @@
 
 
 
-    <partial name="~/Views/Account/Edit.cshtml" model="@Model.User"></partial>
-    <partial name="~/Views/Account/Delete.cshtml" model="@Model.User"></partial>
+    <partial name="~/Views/Account/Edit.cshtml" model="@ViewBag.User"></partial>
+    <partial name="~/Views/Account/Delete.cshtml" model="@ViewBag.User"></partial>
 </div>
 <script>
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Entities;
 using MyCollection.Web.Models;
@@ -17,25 +18,20 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
     [HttpGet]
     public async ValueTask<IActionResult> Profile(string userName)
     {
-        var user = await userService.GetByUserNameAsync(userName);
+        var requestUser = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value));
+        var user = await userService
+            .Get()
+            .Include(c => c.Collections)
+            .FirstOrDefaultAsync(u => u.UserName == userName);
 
         if (user is null)
             user = await userService.GetByIdAsync(Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value));
 
-
-        var edit = new UserForEdit
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserName = user.UserName,
-        };
-
-        ViewBag.Edit = edit;
+        ViewBag.User = user;
 
         return View(new ModelForView
         {
-            User = user,
+            User = requestUser,
             ProfileImg = new ProfileImg { UserId = user.Id }
         });
     }
@@ -43,17 +39,22 @@ public class AccountController(IUserService userService, IWebHostEnvironment web
     [HttpPost]
     public async ValueTask<IActionResult> UploadImg(ProfileImg profileImg)
     {
-        var user = await userService.GetByIdAsync(profileImg.UserId);
+        var requestUser = await userService.GetByIdAsync(Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserID")).Value));
+
+        var user = await userService
+            .Get()
+            .Include(c => c.Collections)
+            .FirstOrDefaultAsync(u => u.Id == profileImg.UserId);
 
         if (profileImg.Img is null)
         {
-            return View("Profile", new ModelForView { User = user, ProfileImg = new ProfileImg { UserId = user.Id } });
+            return View("Profile", new ModelForView { User = requestUser, ProfileImg = new ProfileImg { UserId = user.Id } });
         }
 
         if (profileImg.Img.Length > 500000)
         {
             ModelState.AddModelError("", $"Img size is over 500kb, please resize it or choose another img");
-            return View("Profile", new ModelForView { User = user, ProfileImg = new ProfileImg { UserId = user.Id } });
+            return View("Profile", new ModelForView { User = requestUser, ProfileImg = new ProfileImg { UserId = user.Id } });
 
         }
 

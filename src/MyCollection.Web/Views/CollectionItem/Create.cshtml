@@ -1,0 +1,99 @@
+﻿@model CollectionItem;
+
+<div class="modal fade" id="createItem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark myForm">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create collection</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form enctype="multipart/form-data" method="post" id="itemForm">
+                <div class="modal-body d-flex flex-column gap-3">
+                    <div>
+                        <label for="name" class="mb-1">Name</label>
+                        <input id="name" class="form-control bg-dark text-white userInput" asp-for="Name" />
+                    </div>
+                    <div>
+                        @if (Model.Collection is null)
+                        {
+                            <label>Choose collection</label>
+                            var a = new List<string> { "a", "bobur", "salom", "alekum" };
+                            <select class="form-select bg-dark text-white userInput d-flex" id="collectionList">
+                                <option>Select collection</option>
+                                @foreach (var i in a)
+                                {
+                                    <option class="position-relative flex-fill">
+                                        <p class="mx-5">@i</p>
+                                        <p class="position-absolute" style="right:0px">
+                                            ( owner:
+                                            <a asp-controller="Account" asp-action="Profile" asp-route-userName="bobur_jr">bobur_jr</a>
+                                            )
+                                        </p>
+                                    </option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-4">
+                                    <input value="@Model.Collection.Id" asp-for="CollectionId" hidden />
+                                    <label>Collection</label>
+                                    <div class="form-control bg-dark text-white userInput">@Model.Collection.Name</div>
+                                </div>
+                                <div class="col-4">
+                                    <input value="@Model.Collection.OwnerId" id="itemOwnerId" asp-for="OwnerId" hidden />
+                                    <label>Owner</label>
+                                    <div class="form-control bg-dark text-white userInput">@Model.Collection.Owner.UserName</div>
+                                </div>
+                                <div class="col-4">
+                                    <input value="@Model.Collection.OwnerId" asp-for="OwnerId" hidden />
+                                    <label>Type</label>
+                                    <div class="form-control bg-dark text-white userInput">@Model.Collection.Type.ToString()</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <label for="img" class="mb-1">Created date</label>
+                        <input type="date" asp-for="CreatedDate" class="form-control bg-dark text-white userInput" />
+                    </div>
+                    <div>
+                        <label for="img" class="mb-1">Img</label>
+                        <input asp-for="ImgForm" class="form-control bg-dark text-white userInput" />
+                    </div>
+                    <div class="d-flex flex-column">
+                        <input asp-for="Description" id="myModelProperty" />
+                        <label for="editor">Description</label>
+                        <div id="editor"></div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" asp-controller="CollectionItem" asp-action="Create" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+    });
+
+    function handleSubmit() {
+        var quillContent = quill.root.innerHTML; // Get the HTML content from Quill
+        document.getElementById('myModelProperty').value = quillContent;
+        console.log(quillContent);
+    }
+
+    document.getElementById("itemForm").addEventListener("submit", (e) => {
+        handleSubmit();
+    })
+</script>
+
+
