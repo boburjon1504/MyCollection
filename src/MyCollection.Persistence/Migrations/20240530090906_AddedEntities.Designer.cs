@@ -13,7 +13,7 @@ using NpgsqlTypes;
 namespace MyCollection.Persistence.Migrations
 {
     [DbContext(typeof(CollectionDbContext))]
-    [Migration("20240530080051_AddedEntities")]
+    [Migration("20240530090906_AddedEntities")]
     partial class AddedEntities
     {
         /// <inheritdoc />
@@ -255,6 +255,10 @@ namespace MyCollection.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Mode")
                         .IsRequired()
                         .HasColumnType("text");
 

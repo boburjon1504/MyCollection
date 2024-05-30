@@ -20,7 +20,9 @@ public class User : Entity
     
     public string? ImgPath { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
+
+    public string Mode { get; set; } = "dark";
 
     public ICollection<Collection> Collections { get; set; } = new List<Collection>();
 }

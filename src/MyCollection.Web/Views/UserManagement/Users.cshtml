@@ -12,8 +12,10 @@
                 <th class="text-center">Username</th>
                 <th class="text-center">Firstname</th>
                 <th class="text-center">Lastname</th>
+                <th class="text-center">Role</th>
                 <th class="text-center">Email</th>
                 <th class="text-center">Status</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
 
@@ -26,28 +28,32 @@
                 c++;
                 <tr>
                     <td class="text-center">@c</td>
-                    <td class="d-flex justify-content-center align-items-center gap-4" style="height:65.5px">
-                        @if (user.ImgPath is not null)
-                        {
-                            <img src="@user.ImgPath" class="rounded-circle" style="width:40px;height:40px" />
-                        }
-                        else
-                        {
-                            <img src="~/Images/github.jpg" class="rounded-circle" style="width:40px;height:40px" />
-                        }
-                        <a asp-controller="Account" asp-action="Profile" asp-route-userName="@user.UserName">
-                            @user.UserName
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
-                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
-                            </svg>
-                        </a>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center gap-4">
+
+                            @if (user.ImgPath is not null)
+                            {
+                                <img src="@user.ImgPath" class="rounded-circle" style="width:40px;height:40px" />
+                            }
+                            else
+                            {
+                                <img src="~/Images/github.jpg" class="rounded-circle" style="width:40px;height:40px" />
+                            }
+                            <a asp-controller="Account" asp-action="Profile" asp-route-userName="@user.UserName">
+                                @user.UserName
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+                                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+                                </svg>
+                            </a>
+                        </div>
                     </td>
                     <td class="text-center">@user.FirstName</td>
                     <td class="text-center">@user.LastName</td>
+                    <td class="text-center">@user.Role.ToString()</td>
                     <td class="text-center">@user.Email</td>
                     <td class="text-center">
-                        @if (c % 2 == 0)
+                        @if (!user.IsActive)
                         {
                             <button class="btn btn-outline-danger" disabled>Blocked</button>
                         }
@@ -55,6 +61,47 @@
                         {
                             <button class="btn btn-outline-success" disabled>Active</button>
                         }
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a class="btn btn-outline-danger" asp-controller="UserManagement" asp-action="Delete" asp-route-userId="@user.Id">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                </svg>
+                            </a>
+                            @if (!user.IsActive)
+                            {
+                                <a class="btn btn-outline-success" asp-controller="UserManagement" asp-action="BlockOrUnblock" asp-route-userId="@user.Id">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
+                                    </svg>
+                                </a>
+
+                            }
+                            else
+                            {
+                                <a class="btn btn-outline-secondary" asp-controller="UserManagement" asp-action="BlockOrUnblock" asp-route-userId="@user.Id">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
+                                    </svg>
+                                </a>
+                            }
+                            @if (user.Role == Role.Admin)
+                            {
+                                <a class="btn btn-outline-secondary" asp-controller="UserManagement" asp-action="GiveRole" asp-route-userId="@user.Id" asp-route-role="@Role.User">
+                                    Make User
+                                </a>
+
+                            }
+                            else
+                            {
+                                <a class="btn btn-outline-success" asp-controller="UserManagement" asp-action="GiveRole" asp-route-userId="@user.Id" asp-route-role="@Role.Admin">
+                                    Make Admin
+                                </a>
+                            }
+
+                        </div>
                     </td>
                 </tr>
             }

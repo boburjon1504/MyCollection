@@ -39,7 +39,8 @@ namespace MyCollection.Persistence.Migrations
                         .Annotation("Npgsql:TsVectorConfig", "english")
                         .Annotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "Email", "UserName" }),
                     ImgPath = table.Column<string>(type: "text", nullable: true),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    Mode = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

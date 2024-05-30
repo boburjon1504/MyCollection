@@ -20,4 +20,33 @@ public class UserManagementController(IUserService userService) : Controller
 
         return View(model);
     }
+    public async ValueTask<IActionResult> GiveRole(Guid userId, Role role)
+    {
+        var user = await userService.GetByIdAsync(userId);
+
+        user.Role = role;
+
+        await userService.UpdateAsync(user);
+
+        return RedirectToAction("Users");
+    }
+
+    public async ValueTask<IActionResult> BlockOrUnblock(Guid userId)
+    {
+        var user = await userService.GetByIdAsync(userId);
+
+        user.IsActive = !user.IsActive;
+
+        await userService.UpdateAsync(user);
+
+        return RedirectToAction("Users");
+    }
+    public async ValueTask<IActionResult> Delete(Guid userId)
+    {
+        var user = await userService.GetByIdAsync(userId);
+
+        await userService.DeleteAsync(user);
+
+        return RedirectToAction("Users");
+    }
 }
