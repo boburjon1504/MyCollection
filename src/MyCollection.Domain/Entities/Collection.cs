@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MyCollection.Domain.Common.Auditables;
 using MyCollection.Domain.Enums;
+using NpgsqlTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyCollection.Domain.Entities;
@@ -23,6 +24,8 @@ public class Collection : Entity
     public ICollection<CollectionItem> Items { get; set; } = new List<CollectionItem>();
 
     public User Owner { get; set; }
+
+    public NpgsqlTsVector SearchVector { get; set; }
 
     [NotMapped]
     public IFormFile ImgForm { get; set; }

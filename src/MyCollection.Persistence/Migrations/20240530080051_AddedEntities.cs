@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -34,6 +35,9 @@ namespace MyCollection.Persistence.Migrations
                     UserName = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "english")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "FirstName", "LastName", "Email", "UserName" }),
                     ImgPath = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -53,7 +57,10 @@ namespace MyCollection.Persistence.Migrations
                     Type = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ItemsCount = table.Column<int>(type: "integer", nullable: false),
-                    ImgPath = table.Column<string>(type: "text", nullable: false)
+                    ImgPath = table.Column<string>(type: "text", nullable: false),
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "english")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "Name", "Description" })
                 },
                 constraints: table =>
                 {
@@ -78,7 +85,10 @@ namespace MyCollection.Persistence.Migrations
                     ImgPath = table.Column<string>(type: "text", nullable: false),
                     LikesCount = table.Column<int>(type: "integer", nullable: false),
                     CommentsCount = table.Column<int>(type: "integer", nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "english")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "Name", "Description" })
                 },
                 constraints: table =>
                 {
@@ -106,6 +116,9 @@ namespace MyCollection.Persistence.Migrations
                     ItemId = table.Column<Guid>(type: "uuid", nullable: false),
                     ParentId = table.Column<Guid>(type: "uuid", nullable: true),
                     Message = table.Column<string>(type: "text", nullable: false),
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "english")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "Message" }),
                     SendAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CommentId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
@@ -193,6 +206,12 @@ namespace MyCollection.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Collections_SearchVector",
+                table: "Collections",
+                column: "SearchVector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_CommentId",
                 table: "Comments",
                 column: "CommentId");
@@ -208,6 +227,12 @@ namespace MyCollection.Persistence.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_SearchVector",
+                table: "Comments",
+                column: "SearchVector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_SenderId",
                 table: "Comments",
                 column: "SenderId");
@@ -221,6 +246,12 @@ namespace MyCollection.Persistence.Migrations
                 name: "IX_Items_OwnerId",
                 table: "Items",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_SearchVector",
+                table: "Items",
+                column: "SearchVector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItemTag_TagId",
@@ -248,6 +279,12 @@ namespace MyCollection.Persistence.Migrations
                 table: "Users",
                 column: "Email",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_SearchVector",
+                table: "Users",
+                column: "SearchVector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_UserName",

@@ -22,10 +22,15 @@
             <div class="container d-flex justify-content-end justify-content-md-between">
                 <a class="navbar-brand fs-2 d-none d-lg-block d-md-block d-sm-block" asp-controller="Home" asp-action="Index">My collection</a>
                 <div class="d-flex gap-3 justify-content-between flex-fill">
-                    <div class="d-flex">
-                        <input class="border form-control text-white bg-dark px-3 userInput flex-grow-1" type="search" placeholder="Search" />
-                        <button class="btn btn-outline-info">Search</button>
-                    </div>
+                    <form>
+                        <div class="d-flex">
+                            @{
+                                var searchText = "";
+                            }
+                            <input class="border form-control text-white bg-dark px-3 userInput flex-grow-1" type="search" asp-for="@searchText" placeholder="Search" />
+                            <button class="btn btn-outline-info" type="submit" asp-controller="Search" asp-action="Search" asp-route-searchText="@searchText">Search</button>
+                        </div>
+                    </form>
                     <button class="navbar-toggler border text-black shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>

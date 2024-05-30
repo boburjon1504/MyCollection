@@ -11,6 +11,7 @@ using MyCollection.Persistence.Brokers.Interfaces;
 using MyCollection.Persistence.DataContext;
 using MyCollection.Persistence.Repositories;
 using MyCollection.Persistence.Repositories.Interfaces;
+using MyCollection.Web.Helpers;
 using MyCollection.Web.Hubs;
 using System.Net;
 using System.Text;
@@ -22,8 +23,10 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(
 builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
 builder.Services.AddDbContext<CollectionDbContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHttpContextAccessor();
 
 builder.Services
+    .AddScoped<IContextRequest,ContextRequest>()
     .AddScoped<IImgService, ImgService>()
     .AddScoped<IUserRepository, UserRepository>()
     .AddScoped<ICollectionRepository, CollectionRepository>()

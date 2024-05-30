@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MyCollection.Domain.Common.Auditables;
+using NpgsqlTypes;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyCollection.Domain.Entities;
@@ -20,6 +21,8 @@ public class CollectionItem : Entity
     public int CommentsCount { get; set; }
 
     public DateTimeOffset CreatedDate { get; set; }
+
+    public NpgsqlTsVector SearchVector { get; set; }
 
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     

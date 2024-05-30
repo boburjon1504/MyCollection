@@ -5,11 +5,14 @@ using System.Security.Claims;
 
 namespace MyCollection.Web.Helpers;
 
-public class ContextRequest(IUserService userService,IHttpContextAccessor httpContext)
+public class ContextRequest(IUserService userService,IHttpContextAccessor httpContext) : IContextRequest
 {
     private readonly ClaimsPrincipal _principal = httpContext.HttpContext.User;
-    public async ValueTask<User?> GetRequestedUser()
+    public async ValueTask<User?> GetRequestedUserAsync()
     {
+        if (!IsAuthorized())
+            return new User();
+
         return await userService.GetByIdAsync(GetUserId());
     }
     

@@ -8,6 +8,11 @@ internal class CollectionItemConfiguration : IEntityTypeConfiguration<Collection
     public void Configure(EntityTypeBuilder<CollectionItem> builder)
     {
         builder
+            .HasGeneratedTsVectorColumn(c => c.SearchVector, "english", c => new { c.Name, c.Description })
+            .HasIndex(c => c.SearchVector)
+            .HasMethod("GIN");
+
+        builder
             .HasOne(c => c.Owner)
             .WithMany()
             .HasForeignKey(i => i.OwnerId);

@@ -1,0 +1,178 @@
+﻿@model ModelForView
+<div class="d-flex flex-column p-2 gap-3 mt-2">
+
+    <div class="card text-center bg-dark myForm w-100">
+        <div class="card-header fw-bolder fs-4 d-flex justify-content-center">
+            <p class="fs-5 m-0">Users</p>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Users.Count == 0)
+            {
+                <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                    <p class="fw-bold p-0 m-0">No users found</p>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Username</th>
+                            <th class="text-center">Firstname</th>
+                            <th class="text-center">Lastname</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        
+                        @for(var i = 0;i<ViewBag.Users.Count;i++)
+                        {
+                            
+                            <tr>
+                                <td class="text-center">@(i+1)</td>
+                                <td class="d-flex justify-content-center align-items-center gap-4" style="height:65.5px">
+                                    @if (ViewBag.Users[i].ImgPath is not null)
+                                    {
+                                        <img src="@ViewBag.Users[i].ImgPath" class="rounded-circle" style="width:40px;height:40px" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Images/github.jpg" class="rounded-circle" style="width:40px;height:40px" />
+                                    }
+                                    <a asp-controller="Account" asp-action="Profile" asp-route-userName="@ViewBag.Users[i].UserName">
+                                        @ViewBag.Users[i].UserName
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+                                            <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td class="text-center">@ViewBag.Users[i].FirstName</td>
+                                <td class="text-center">@ViewBag.Users[i].LastName</td>
+                                <td class="text-center">@ViewBag.Users[i].Email</td>
+                                <td class="text-center">
+                                    @if (!ViewBag.Users[i].IsActive)
+                                    {
+                                        <button class="btn btn-outline-danger" disabled>Blocked</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-outline-success" disabled>Active</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            }
+        </div>
+        <div class="card-footer text-body-secondary">
+            2 days ago
+        </div>
+    </div>
+
+    <div class="card text-center bg-dark myForm w-100">
+        <div class="card-header fw-bolder fs-4 d-flex justify-content-center">
+            <p class="fs-5 m-0">Collections</p>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Collections.Count == 0)
+            {
+                <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                    <p class="fw-bold p-0 m-0">No collections found </p>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead class="text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Collection name</th>
+                            <th>Type</th>
+                            <th>Created date</th>
+                            <th>Items count</th>
+                            <th>Total Likes</th>
+                            <th>Total Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @for (var i = 0; i < ViewBag.Collections.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@ViewBag.Collections[i].Owner.UserName" asp-route-collectionName="@ViewBag.Collections[i].Name">@ViewBag.Collections[i].Name</a>
+                                </td>
+                                <td>@ViewBag.Collections[i].Type.ToString()</td>
+                                <td>@ViewBag.Collections[i].CreatedDate.ToString("dd MMM yyyy")</td>
+                                <td>@ViewBag.Collections[i].ItemsCount</td>
+                                <td>154</td>
+                                <td>30</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div class="card-footer text-body-secondary">
+            2 days ago
+        </div>
+    </div>
+
+
+    <div class="card text-center bg-dark myForm w-100">
+        <div class="card-header fw-bolder fs-4 d-flex justify-content-center">
+            <p class="fs-5 m-0">Collection Items</p>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Items.Count == 0)
+            {
+                <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                    <p class="fw-bold p-0 m-0">found </p>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead class="text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created date</th>
+                            <th>Likes</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @for (var i = 0; i < ViewBag.Items.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <a asp-controller="CollectionItem" asp-action="GetCollectionItem"
+                                       asp-route-userName="@ViewBag.Items[i].Owner.UserName"
+                                       asp-route-collectionName="@ViewBag.Items[i].Collection.Name"
+                                       asp-route-itemName="@ViewBag.Items[i].Name">@ViewBag.Items[i].Name</a>
+                                </td>
+                                <td>@ViewBag.Items[i].CreatedDate.ToString("dd MMM yyy")</td>
+                                <td>@ViewBag.Items[i].LikesCount</td>
+                                <td>@ViewBag.Items[i].CommentsCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div class="card-footer text-body-secondary">
+            2 days ago
+        </div>
+    </div>
+
+
+</div>

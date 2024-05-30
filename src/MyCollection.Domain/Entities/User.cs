@@ -1,5 +1,6 @@
 ﻿using MyCollection.Domain.Common.Auditables;
 using MyCollection.Domain.Enums;
+using NpgsqlTypes;
 namespace MyCollection.Domain.Entities;
 public class User : Entity
 {
@@ -14,6 +15,8 @@ public class User : Entity
     public string Password { get; set; } = default!;
 
     public Role Role { get; set; } = Role.User;
+
+    public NpgsqlTsVector SearchVector { get; set; }
     
     public string? ImgPath { get; set; }
 

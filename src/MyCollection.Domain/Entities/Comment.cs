@@ -1,4 +1,5 @@
 ﻿using MyCollection.Domain.Common.Auditables;
+using NpgsqlTypes;
 
 namespace MyCollection.Domain.Entities;
 public class Comment : Entity
@@ -12,6 +13,8 @@ public class Comment : Entity
     public Guid? ParentId { get; set; }
 
     public string Message { get; set; } = default!;
+
+    public NpgsqlTsVector SearchVector { get; set; }
 
     public DateTimeOffset SendAt { get; set; }
 
