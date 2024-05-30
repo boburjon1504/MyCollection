@@ -45,18 +45,23 @@
     <div class="card text-center bg-dark myForm w-100">
         <div class="card-header fw-bolder fs-4 d-flex justify-content-center justify-content-lg-between justify-content-md-between">
             <p class="fs-5 m-0 d-none d-md-block d-lg-block">Collection Items</p>
-            <div class="d-flex gap-3 justify-content-start">
-                <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
-                <button type="submit" class="btn btn-outline-success">Search</button>
-                @if (Context.User.Identity.IsAuthenticated && (
-                Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
-                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString()))
-                {
-                    <button type="button" id="create" class="btn btn-success">
-                        Create
-                    </button>
+            <form>
+                @{
+                    var searchText = "";
                 }
-            </div>
+                <div class="d-flex gap-3 justify-content-start">
+                    <input type="search" class="form-control bg-dark text-white userInput" id="itemsSearch" asp-for="@searchText" placeholder="Search" />
+                    <button type="submit" class="btn btn-outline-success" asp-controller="Search" asp-action="Search" asp-route-searchText="@searchText">Search</button>
+                    @if (Context.User.Identity.IsAuthenticated && (
+                    Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
+                    || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString()))
+                    {
+                        <button type="button" id="create" class="btn btn-success">
+                            Create
+                        </button>
+                    }
+                </div>
+            </form>
         </div>
         <div class="card-body">
             @if (ViewBag.Collection.Items.Count == 0)

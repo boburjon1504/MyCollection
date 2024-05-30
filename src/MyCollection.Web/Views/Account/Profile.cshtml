@@ -16,7 +16,7 @@
             @if (ViewBag.User.ImgPath is not null)
             {
                 <img src="@ViewBag.User.ImgPath
-                                                                                                        " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
+                                                                                                            " style="width:150px;height:150px" id="userImg" class="rounded-circle border-3" />
             }
             else
             {
@@ -117,19 +117,23 @@
     <div class="card text-center bg-dark myForm w-100">
         <div class="card-header fw-bolder fs-4 d-flex justify-content-center justify-content-lg-between justify-content-md-between">
             <p class="fs-5 m-0 d-none d-md-block d-lg-block">My Collections</p>
-            <div class="d-flex gap-3 justify-content-start">
-                <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
-                <button type="submit" class="btn btn-outline-success">Search</button>
-                <select class="bg-dark userInput form-select text-white" asp-items="Html.GetEnumSelectList<CollectionType>()">
-                </select>
-                @if (Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
-                || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == ViewBag.User.Id.ToString())
-                {
-                    <button type="button" class="btn btn-success">
-                        Create
-                    </button>
+            <form>
+                @{
+                    var searchText = "";
                 }
-            </div>
+                <div class="d-flex gap-3 justify-content-start">
+                    <input type="search" class="form-control bg-dark text-white userInput" id="itemsSearch" asp-for="@searchText" placeholder="Search" />
+                    <button type="submit" class="btn btn-outline-success" asp-controller="Search" asp-action="Search" asp-route-searchText="@searchText">Search</button>
+                    @if (Context.User.Identity.IsAuthenticated && (
+                    Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value.Equals(Role.Admin.ToString())
+                    || Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value == Model.User.Id.ToString()))
+                    {
+                        <button type="button" id="create" class="btn btn-success">
+                            Create
+                        </button>
+                    }
+                </div>
+            </form>
         </div>
         <div class="card-body">
             @if (ViewBag.User.Collections.Count == 0)
@@ -177,11 +181,22 @@
     </div>
 
 
-
+    @{
+        var newCollection = new Collection
+            {
+                OwnerId = ViewBag.User.Id
+            };
+    }
+    <partial name="~/Views/Collection/Create.cshtml" model="newCollection"></partial>
     <partial name="~/Views/Account/Edit.cshtml" model="@ViewBag.User"></partial>
     <partial name="~/Views/Account/Delete.cshtml" model="@ViewBag.User"></partial>
 </div>
 <script>
+    document.getElementById('create').addEventListener("click", () => {
+
+        $("#createCollection").modal('show')
+
+    })
 
     showModal("editBtn", "editFrm")
     showModal("deleteAccount", "deleteForm")

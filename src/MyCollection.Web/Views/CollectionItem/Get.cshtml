@@ -8,16 +8,6 @@
         <div class="d-flex gap-3 justify-content-start">
             <input type="search" class="form-control bg-dark text-white userInput" placeholder="Search" />
             <button type="submit" class="btn btn-outline-success">Search</button>
-            <select class="bg-dark userInput form-select text-white">
-                <option>Men</option>
-                <option>Men</option>
-                <option>Men</option>
-                <option>Men</option>
-            </select>
-
-            <button type="button" id="create" class="btn btn-success">
-                Create
-            </button>
 
             <div class="modal fade" id="warning" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -99,10 +89,7 @@
         </div>
     </div>
 </div>
-@{
-    var newItem = new CollectionItem();
-}
-<partial name="~/Views/CollectionItem/Create.cshtml" model="newItem"></partial>
+
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

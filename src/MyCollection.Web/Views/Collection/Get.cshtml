@@ -90,7 +90,10 @@
     </div>
 </div>
 @{
-    var newCollection = new Collection();
+    var newCollection = new Collection
+            {
+                OwnerId = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("UserId")).Value)
+            };
 }
 <partial name="~/Views/Collection/Create.cshtml" model="newCollection"></partial>
 

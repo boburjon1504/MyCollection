@@ -10,5 +10,7 @@ public class ModelForView
 
     public ProfileImg ProfileImg { get; set; } = new ProfileImg();
 
+    public Pagination Pagination { get; set; } = new Pagination();
+
     public ErrorViewModel ErrorViewModel { get; set; }
 }

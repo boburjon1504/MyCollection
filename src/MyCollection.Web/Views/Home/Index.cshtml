@@ -11,33 +11,43 @@
             Latest items
         </div>
         <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Collection</th>
-                        <th>Owner</th>
-                        <th>Posted date</th>
-                        <th>Likes</th>
-                        <th>Comments</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (var i = 0; i < 5; i++)
-                    {
+            @if (ViewBag.LatestItems.Count == 0)
+            {
+                <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                    <p class="fw-bold p-0 m-0">found </p>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead class="text-center">
                         <tr>
-                            <td>@(i + 1)</td>
-                            <td>Books</td>
-                            <td>My ideas</td>
-                            <td>bobur_jr</td>
-                            <td>@DateTime.Now.ToLongDateString()</td>
-                            <td>1000</td>
-                            <td>312</td>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created date</th>
+                            <th>Likes</th>
+                            <th>Comments</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="text-center">
+                        @for (var i = 0; i < ViewBag.LatestItems.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <a asp-controller="CollectionItem" asp-action="GetCollectionItem"
+                                       asp-route-userName="@ViewBag.LatestItems[i].Owner.UserName"
+                                       asp-route-collectionName="@ViewBag.LatestItems[i].Collection.Name"
+                                       asp-route-itemName="@ViewBag.LatestItems[i].Name">@ViewBag.LatestItems[i].Name</a>
+                                </td>
+                                <td>@ViewBag.LatestItems[i].CreatedDate.ToString("dd MMM yyy")</td>
+                                <td>@ViewBag.LatestItems[i].LikesCount</td>
+                                <td>@ViewBag.LatestItems[i].CommentsCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
         <div class="card-footer text-body-secondary">
             <div class="d-flex justify-content-center">
@@ -53,33 +63,44 @@
             Top 5 Biggest Collections
         </div>
         <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Collection</th>
-                        <th>Owner</th>
-                        <th>Posted date</th>
-                        <th>Likes</th>
-                        <th>Comments</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (var i = 0; i < 5; i++)
-                    {
+            @if (ViewBag.TopFiveCollections.Count == 0)
+            {
+                <div class="d-flex flex-column justify-content-center align-items-center p-5">
+                    <p class="fw-bold p-0 m-0">No collections found </p>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead class="text-center">
                         <tr>
-                            <td>@(i + 1)</td>
-                            <td>Books</td>
-                            <td>My ideas</td>
-                            <td>bobur_jr</td>
-                            <td>@DateTime.Now.ToLongDateString()</td>
-                            <td>1000</td>
-                            <td>312</td>
+                            <th>#</th>
+                            <th>Collection name</th>
+                            <th>Type</th>
+                            <th>Created date</th>
+                            <th>Items count</th>
+                            <th>Total Likes</th>
+                            <th>Total Comments</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="text-center">
+                        @for (var i = 0; i < ViewBag.TopFiveCollections.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <a asp-controller="Collection" asp-action="GetCollection" asp-route-userName="@ViewBag.TopFiveCollections[i].Owner.UserName" asp-route-collectionName="@ViewBag.TopFiveCollections[i].Name">@ViewBag.TopFiveCollections[i].Name</a>
+                                </td>
+                                <td>@ViewBag.TopFiveCollections[i].Type.ToString()</td>
+                                <td>@ViewBag.TopFiveCollections[i].CreatedDate.ToString("dd MMM yyyy")</td>
+                                <td>@ViewBag.TopFiveCollections[i].ItemsCount</td>
+                                <td>154</td>
+                                <td>30</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
         <div class="card-footer text-body-secondary">
            @*  <div class="d-flex justify-content-center">

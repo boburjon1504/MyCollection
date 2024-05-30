@@ -1,22 +1,42 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyCollection.Application.Interfaces;
 using MyCollection.Domain.Entities;
+using MyCollection.Web.Helpers;
 using MyCollection.Web.Models;
 using System.Diagnostics;
 
 namespace MyCollection.Web.Controllers;
-public class HomeController(IAccountService accountService, IUserService userService) : Controller
+public class HomeController(IAccountService accountService,
+    IUserService userService,
+    ICollectionService collectionService,
+    ICollectionItemService itemService,
+    IContextRequest request) : Controller
 {
-    public async ValueTask<IActionResult> Index()
+    public async ValueTask<IActionResult> Index(Pagination pagination)
     {
-        var a = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("UserId"));
-        if (a is null)
-            return View();
+        var latestItems = await itemService.Get()
+            .OrderByDescending(i => i.CreatedDate)
+            .Skip(pagination.PageSize * pagination.PageToken)
+            .Take(pagination.PageSize)
+            .Include(c => c.Owner)
+            .Include(c => c.Collection)
+            .ToListAsync();
+        ViewBag.LatestItems = latestItems;
 
-         var userId = Guid.Parse(a.Value);
-        var user = await userService.GetByIdAsync(userId, HttpContext.RequestAborted);
+        var topFiveCollections = await collectionService
+            .Get()
+            .OrderByDescending(c => c.ItemsCount)
+            .Take(5).Include(c => c.Owner)
+            .ToListAsync();
 
-        return View(new ModelForView { User=user, LoginDetails = new LoginDetails()});
+        ViewBag.TopFiveCollections = topFiveCollections;
+
+        var user = await request.GetRequestedUserAsync();
+
+        pagination.PageToken++;
+
+        return View(new ModelForView { User = user, Pagination = pagination });
     }
 
     [HttpPost]
@@ -31,7 +51,7 @@ public class HomeController(IAccountService accountService, IUserService userSer
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
-            return View("Index",new ModelForView { User=user});
+            return View("Index", new ModelForView { User = user });
         }
         return RedirectToAction("Index");
     }
@@ -48,7 +68,7 @@ public class HomeController(IAccountService accountService, IUserService userSer
         catch (Exception ex)
         {
             ModelState.AddModelError("", ex.Message);
-            return View("Index",new ModelForView { User=user});
+            return View("Index", new ModelForView { User = user });
         }
         return RedirectToAction("Index", "Home");
     }
